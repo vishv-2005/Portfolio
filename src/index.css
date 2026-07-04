@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+/* Set default font styles */
+html, body {
+  font-family: 'Space Grotesk', sans-serif;
+  scroll-behavior: smooth;
+  background-color: #050505;
+}
+
+/* Custom utility for monospace metrics */
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Hide standard scrollbar across browser instances for clean cinematic flow */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Glow transition helper */
+.interactive-card {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
