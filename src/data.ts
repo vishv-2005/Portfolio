@@ -3,19 +3,16 @@ import { Project, Skill, TimelineEvent, Certification } from './types';
 export const PERSONAL_INFO = {
   name: "Vishv Patel",
   taglines: [
-    "Software Engineer",
     "Full Stack Developer",
-    "Flutter Developer",
-    "AI & Machine Learning Enthusiast",
-    "Cloud Computing Learner",
-    "Big Data Student"
+    "Software Developer",
+    "AI & ML Engineer"
   ],
-  bio: "I am a Computer Science Engineering student minor in Mechatronics, deeply passionate about building end-to-end software systems that solve tangible problems. From engineering robust server backends and training custom NLP models, to compiling slick mobile interfaces in Flutter, I love bridging technologies together to deliver clean, highly optimized, and production-ready applications.",
+  bio: "Computer Science Engineering student with a minor in Mechatronics, passionate about building end-to-end software systems that solve real problems. From engineering robust server backends and training custom NLP models to crafting polished mobile interfaces in Flutter, I bridge technologies together to deliver clean, optimized, and production-ready applications.",
   location: "Vadodara, Gujarat, India",
   email: "vishvpatel7005@gmail.com",
   github: "https://github.com/vishv-2005",
   linkedin: "https://linkedin.com/in/vishv-patel-",
-  resumeUrl: "#", // Placeholder or dynamic view
+  resumeUrl: "/resume.pdf",
 };
 
 export const PORTFOLIO_STATS = [
@@ -87,181 +84,45 @@ export const TIMELINE_DATA: TimelineEvent[] = [
 ];
 
 export const SKILLS_DATA: Skill[] = [
-  // Programming
-  {
-    name: "Python",
-    category: "Programming",
-    level: 5,
-    experience: "3 Years",
-    projectsUsedIn: ["WhatsApp CRM Classifier", "HireFlow Resume Ranker", "Data Pipelines"],
-    description: "Core language used for training machine learning networks, text parsing, OCR processing, and API web scraping.",
-    iconName: "Code"
-  },
-  {
-    name: "Java",
-    category: "Programming",
-    level: 4,
-    experience: "3 Years",
-    projectsUsedIn: ["SocietEase", "Data Structures Curriculums"],
-    description: "Heavy Object-Oriented patterns, serving backend server environments (Servlets/JSP) and low-level computational algorithms.",
-    iconName: "Binary"
-  },
-  {
-    name: "JavaScript",
-    category: "Programming",
-    level: 5,
-    experience: "3 Years",
-    projectsUsedIn: ["WhatsApp CRM Dashboard", "HireFlow Frontend", "Portfolio Server"],
-    description: "Core of modern interactive web development, writing responsive nodes, Express server runtimes, and complex client structures.",
-    iconName: "FileJson"
-  },
-  {
-    name: "C",
-    category: "Programming",
-    level: 4,
-    experience: "4 Years",
-    projectsUsedIn: ["Mechatronics Firmware", "Algorithm Optimization"],
-    description: "Enforces memory-safe low-level logic, controller interfaces for hardware nodes, and optimal CPU execution paradigms.",
-    iconName: "Terminal"
-  },
+  // Programming Languages
+  { name: "C", category: "Programming Languages", level: 4, experience: "", projectsUsedIn: [], description: "", iconName: "Terminal" },
+  { name: "Python", category: "Programming Languages", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Code" },
+  { name: "Java", category: "Programming Languages", level: 4, experience: "", projectsUsedIn: [], description: "", iconName: "Binary" },
+  { name: "HTML", category: "Programming Languages", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Code" },
+  { name: "CSS", category: "Programming Languages", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Paintbrush" },
+  { name: "JavaScript", category: "Programming Languages", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "FileJson" },
 
-  // Frontend
-  {
-    name: "React",
-    category: "Frontend",
-    level: 5,
-    experience: "2 Years",
-    projectsUsedIn: ["WhatsApp CRM Web", "HireFlow Dashboard", "Interactive Portfolios"],
-    description: "Component modularity, optimized hook lifecycle triggers, and responsive glassmorphic interfaces layered with state libraries.",
-    iconName: "Layout"
-  },
-  {
-    name: "Flutter",
-    category: "Frontend",
-    level: 5,
-    experience: "2 Years",
-    projectsUsedIn: ["Flutter Chess App", "WhatsApp CRM Mobile Client"],
-    description: "Multi-platform client compiling, custom rendering engines, state tracking, and native Android integrations.",
-    iconName: "Smartphone"
-  },
-  {
-    name: "Tailwind CSS",
-    category: "Frontend",
-    level: 5,
-    experience: "3 Years",
-    projectsUsedIn: ["HireFlow UI", "AI CRM Web App", "Portfolio Theme"],
-    description: "Utility-first design flow, fluid bento grids, layout adjustments, and custom animations for responsive high-end designs.",
-    iconName: "Paintbrush"
-  },
+  // Frameworks & Libraries
+  { name: "Flutter", category: "Frameworks & Libraries", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Smartphone" },
+  { name: "React", category: "Frameworks & Libraries", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Layout" },
+  { name: "Node.js", category: "Frameworks & Libraries", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Server" },
+  { name: "Express.js", category: "Frameworks & Libraries", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Cpu" },
+  { name: "Flask", category: "Frameworks & Libraries", level: 4, experience: "", projectsUsedIn: [], description: "", iconName: "Flame" },
+  { name: "EasyOCR", category: "Frameworks & Libraries", level: 4, experience: "", projectsUsedIn: [], description: "", iconName: "Eye" },
+  { name: "PyMuPDF", category: "Frameworks & Libraries", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "FileText" },
 
-  // Backend
-  {
-    name: "Node.js",
-    category: "Backend",
-    level: 5,
-    experience: "2 Years",
-    projectsUsedIn: ["WhatsApp CRM Server", "Interactive APIs"],
-    description: "Scalable event-driven server execution, background event streaming, and custom secure route handling.",
-    iconName: "Server"
-  },
-  {
-    name: "Express.js",
-    category: "Backend",
-    level: 5,
-    experience: "2 Years",
-    projectsUsedIn: ["WhatsApp CRM Server", "Custom Portfolios"],
-    description: "Minimalist, robust routing frame, middleware integrations, error logging, and high-performance endpoints.",
-    iconName: "Cpu"
-  },
-  {
-    name: "Flask",
-    category: "Backend",
-    level: 4,
-    experience: "2 Years",
-    projectsUsedIn: ["HireFlow Resume Parser"],
-    description: "Lightweight Python web gateway to host machine learning inference pipes, text embeddings, and text parsing endpoints.",
-    iconName: "Flame"
-  },
+  // Databases & Tools
+  { name: "MongoDB", category: "Databases & Tools", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Database" },
+  { name: "MySQL", category: "Databases & Tools", level: 4, experience: "", projectsUsedIn: [], description: "", iconName: "Columns4" },
+  { name: "Git", category: "Databases & Tools", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "GitBranch" },
+  { name: "GitHub", category: "Databases & Tools", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "GitBranch" },
+  { name: "VS Code", category: "Databases & Tools", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Code" },
+  { name: "Android Studio", category: "Databases & Tools", level: 4, experience: "", projectsUsedIn: [], description: "", iconName: "Smartphone" },
+  { name: "Jira", category: "Databases & Tools", level: 4, experience: "", projectsUsedIn: [], description: "", iconName: "Layout" },
+  { name: "Docker", category: "Databases & Tools", level: 3, experience: "", projectsUsedIn: [], description: "", iconName: "Server" },
 
-  // Databases
-  {
-    name: "MongoDB",
-    category: "Databases",
-    level: 5,
-    experience: "2 Years",
-    projectsUsedIn: ["WhatsApp CRM Sync", "HireFlow Candidates"],
-    description: "Highly scaleable document-based datastore, handling unstructured chat logs and nested candidate profile maps.",
-    iconName: "Database"
-  },
-  {
-    name: "MySQL",
-    category: "Databases",
-    level: 4,
-    experience: "3 Years",
-    projectsUsedIn: ["SocietEase Resident Logs"],
-    description: "Strict relational structures, structured query optimization, custom transactional triggers, and schema migrations.",
-    iconName: "Columns4"
-  },
+  // APIs & Platforms
+  { name: "WhatsApp Business Cloud API", category: "APIs & Platforms", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Globe" },
+  { name: "MongoDB Atlas", category: "APIs & Platforms", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Globe" },
+  { name: "Gemini API", category: "APIs & Platforms", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Sparkles" },
+  { name: "RazorPay API", category: "APIs & Platforms", level: 4, experience: "", projectsUsedIn: [], description: "", iconName: "Globe" },
+  { name: "AWS Cloud", category: "APIs & Platforms", level: 4, experience: "", projectsUsedIn: [], description: "", iconName: "Cloud" },
 
-  // Cloud & platforms
-  {
-    name: "AWS Cloud",
-    category: "Cloud",
-    level: 4,
-    experience: "2 Years",
-    projectsUsedIn: ["SageMaker ML Flows", "AWS Academy Tasks", "S3 & EC2 Deployments"],
-    description: "Cloud-native designs utilizing virtual servers (EC2), secure database storage (RDS), S3 bucketing, IAM structures, and scalable ML workflows.",
-    iconName: "Cloud"
-  },
-  {
-    name: "MongoDB Atlas",
-    category: "Cloud",
-    level: 5,
-    experience: "2 Years",
-    projectsUsedIn: ["HireFlow Persistent Storage", "CRM Databases"],
-    description: "Cloud database-as-a-service, handling global distribution, backup pipelines, and auto-scaling schemas.",
-    iconName: "Globe"
-  },
-
-  // AI & ML APIs
-  {
-    name: "Gemini API",
-    category: "AI",
-    level: 5,
-    experience: "2 Years",
-    projectsUsedIn: ["AI WhatsApp CRM Copy Generator", "Portfolio AI Twin"],
-    description: "Generates high-performance context-aware text, localized marketing scripts, image prompt generations, and structured JSON structures.",
-    iconName: "Sparkles"
-  },
-  {
-    name: "EasyOCR",
-    category: "AI",
-    level: 4,
-    experience: "1 Year",
-    projectsUsedIn: ["HireFlow Scanned Resume Parser"],
-    description: "Optical Character Recognition parsing of text blocks embedded inside scanned files, images, and visual application forms.",
-    iconName: "Eye"
-  },
-  {
-    name: "PyMuPDF",
-    category: "AI",
-    level: 5,
-    experience: "2 Years",
-    projectsUsedIn: ["HireFlow PDF Parsing Suite"],
-    description: "Extremely rapid PDF binary parsing, structure mapping, metadata extractions, and inline image splits.",
-    iconName: "FileText"
-  },
-
-  // Tools
-  {
-    name: "Git & GitHub",
-    category: "Tools",
-    level: 5,
-    experience: "4 Years",
-    projectsUsedIn: ["All Collaborative Products"],
-    description: "Distributed code versioning, commit hygiene, team branches, pull requests, automated webhooks, and actions.",
-    iconName: "GitBranch"
-  }
+  // Soft Skills
+  { name: "Problem-solving", category: "Soft Skills", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Sparkles" },
+  { name: "Logical thinking", category: "Soft Skills", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Sparkles" },
+  { name: "Teamwork", category: "Soft Skills", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Sparkles" },
+  { name: "Communication", category: "Soft Skills", level: 5, experience: "", projectsUsedIn: [], description: "", iconName: "Sparkles" }
 ];
 
 export const CERTIFICATIONS_DATA: Certification[] = [
@@ -304,8 +165,8 @@ export const PROJECTS_DATA: Project[] = [
     tags: ["Gemini API", "WhatsApp Cloud API", "Python ML", "Node.js", "React", "MongoDB Sync", "Flutter"],
     metrics: [
       { label: "Training Dataset", value: "55,000+ messages" },
-      { label: "Git Commits", value: "39+ commits" },
-      { label: "Manual Overhead Reduction", value: "~60%" }
+      { label: "Overhead Reduction", value: "~60%" },
+      { label: "Platforms", value: "Web + Mobile" }
     ],
     accentColor: "emerald",
     highlights: [
@@ -314,7 +175,7 @@ export const PROJECTS_DATA: Project[] = [
       "Real-time, offline-cached MongoDB sync providing ultra-reliable conversation dashboards.",
       "Slick Flutter client for mobile notifications and live client management on the move."
     ],
-    githubUrl: "https://github.com/vishv-2005"
+    githubUrl: "https://github.com/vishv-2005/Walleto"
   },
   {
     id: "hireflow",
@@ -325,8 +186,8 @@ export const PROJECTS_DATA: Project[] = [
     tags: ["JobBERT Embeddings", "TF-IDF", "Python Flask", "EasyOCR", "React", "MongoDB Atlas", "PyMuPDF"],
     metrics: [
       { label: "Profiles Screened", value: "500+" },
-      { label: "Testing Accuracy", value: "89%" },
-      { label: "Development Commits", value: "60+ commits" }
+      { label: "NLP Accuracy", value: "89%" },
+      { label: "Parsing Engine", value: "JobBERT + TF-IDF" }
     ],
     accentColor: "cyan",
     highlights: [
@@ -335,7 +196,7 @@ export const PROJECTS_DATA: Project[] = [
       "Recruiter analytics displaying aggregate skill clouds, experience distributions, and candidate scores.",
       "Persistent cloud database storage in MongoDB Atlas ensuring fast queries and live sync."
     ],
-    githubUrl: "https://github.com/vishv-2005"
+    githubUrl: "https://github.com/vishv-2005/Hireflow"
   },
   {
     id: "flutter-chess",
@@ -356,7 +217,7 @@ export const PROJECTS_DATA: Project[] = [
       "Stockfish AI thinking animations and glow indicators mapping valid legal moves in real-time.",
       "Robust state caching allowing matches to be saved and resumed dynamically."
     ],
-    githubUrl: "https://github.com/vishv-2005"
+    githubUrl: "https://github.com/vishv-2005/Chess"
   },
   {
     id: "societease",
@@ -377,6 +238,7 @@ export const PROJECTS_DATA: Project[] = [
       "Automated monthly maintenance logs and receipts linked to an integrated database.",
       "Centralized notice boards and meeting schedule logs to ensure coordination."
     ],
-    githubUrl: "https://github.com/vishv-2005"
+    demoUrl: "https://societease.online",
+    githubUrl: "https://github.com/vishv-2005/SocietEaseWeb"
   }
 ];

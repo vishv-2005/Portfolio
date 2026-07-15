@@ -1,18 +1,19 @@
 @import "tailwindcss";
 
-/* Set default font styles */
+/* Minimal portfolio — calm deep navy palette */
 html, body {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   scroll-behavior: smooth;
-  background-color: #050505;
+  background-color: #0a192f;
+  color: #ccd6f6;
 }
 
-/* Custom utility for monospace metrics */
+/* Monospace accent font */
 .font-mono {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Hide standard scrollbar across browser instances for clean cinematic flow */
+/* Hide scrollbar for clean look */
 .scrollbar-none::-webkit-scrollbar {
   display: none;
 }
@@ -21,7 +22,24 @@ html, body {
   scrollbar-width: none;
 }
 
-/* Glow transition helper */
-.interactive-card {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+/* Selection styling */
+::selection {
+  background: rgba(100, 255, 218, 0.2);
+  color: #64ffda;
+}
+
+/* Keyboard accessibility */
+*:focus-visible {
+  outline: 2px solid rgba(100, 255, 218, 0.5);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Smooth transitions */
+a, button {
+  transition: all 0.25s ease;
 }

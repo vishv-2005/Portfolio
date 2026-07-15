@@ -1,24 +1,26 @@
 import { useState, useRef, useEffect, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Send, Bot, Sparkles, AlertCircle, RefreshCw } from 'lucide-react';
+import { Send, Bot, X, MessageCircle } from 'lucide-react';
 import { ChatMessage } from '../types';
 
 export default function AITwinChat() {
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: 'assistant',
-      content: "Hello! I am Vishv's AI Twin. I've been trained on his full-stack products, mobile development, NLP pipelines, and AWS cloud engineering architecture. What would you like to ask me about his software engineering journey?",
+      content: "Hi! I'm Vishv's AI assistant. Ask me anything about his projects, skills, or experience.",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messages.length > 1 || isLoading) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   }, [messages, isLoading]);
 
   const handleSendMessage = async (text: string) => {
@@ -38,12 +40,9 @@ export default function AITwinChat() {
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: text,
-          // Extract only last 6 messages to keep context efficient and stay within rates
           history: messages.slice(-6).map(m => ({
             role: m.role,
             content: m.content
@@ -53,7 +52,7 @@ export default function AITwinChat() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to sync with Vishv\'s AI Core.');
+        throw new Error(errorData.error || 'Failed to get response.');
       }
 
       const data = await response.json();
@@ -66,7 +65,12 @@ export default function AITwinChat() {
       setMessages(prev => [...prev, assistantMsg]);
     } catch (err: any) {
       console.error(err);
-      setError(err.message || 'An unexpected error occurred during execution.');
+      let displayError = err.message || 'Something went wrong.';
+      try {
+        const parsed = JSON.parse(displayError);
+        if (parsed.error?.message) displayError = parsed.error.message;
+      } catch (e) {}
+      setError(displayError);
     } finally {
       setIsLoading(false);
     }
@@ -78,125 +82,143 @@ export default function AITwinChat() {
   };
 
   return (
-    <div className="bg-[#0b101c]/90 border border-blue-900/40 rounded-2xl p-4 sm:p-6 backdrop-blur-xl shadow-2xl flex flex-col h-[520px] relative overflow-hidden">
-      
-      {/* Decorative backdrop gradients */}
-      <div className="absolute top-0 left-0 w-44 h-44 bg-purple-500/5 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-44 h-44 bg-cyan-500/5 blur-3xl pointer-events-none" />
-
-      {/* Header Info */}
-      <div className="flex items-center justify-between border-b border-gray-800/80 pb-4 mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-cyan-400 to-purple-500 p-[1px]">
-            <div className="w-full h-full bg-[#050914] rounded-xl flex items-center justify-center">
-              <Bot className="w-5 h-5 text-cyan-400" />
-            </div>
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-gray-100 flex items-center gap-1.5 leading-none">
-              Vishv_AI_Twin
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block" />
-            </h3>
-            <span className="text-[10px] text-gray-500 uppercase tracking-widest font-mono">
-              Online Core Pipeline
-            </span>
-          </div>
-        </div>
-
-        <button
-          onClick={() => {
-            setMessages([
-              {
-                role: 'assistant',
-                content: "System refreshed. Ask me anything about Vishv's engineering work!",
-                timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-              }
-            ]);
-            setError(null);
-          }}
-          className="text-gray-500 hover:text-cyan-400 p-1.5 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
-          title="Reset conversation"
-        >
-          <RefreshCw className="w-4 h-4" />
-        </button>
-      </div>
-
-      {/* Messages Scrolling Area */}
-      <div className="flex-1 overflow-y-auto scrollbar-none space-y-4 pr-1 mb-4">
-        {messages.map((msg, index) => {
-          const isAssistant = msg.role === 'assistant';
-          return (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className={`flex ${isAssistant ? 'justify-start' : 'justify-end'}`}
+    <>
+      {/* Floating trigger button — prominent with pulse ring */}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="fixed bottom-6 right-6 z-50 flex items-center gap-3"
+          >
+            {/* Label */}
+            <motion.span
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 2, duration: 0.5 }}
+              className="bg-[#112240] border border-[#1d3461] text-[#ccd6f6] text-xs font-mono px-3 py-1.5 rounded-lg shadow-lg hidden sm:block"
             >
-              <div
-                className={`max-w-[85%] rounded-2xl p-3.5 text-sm leading-relaxed ${
-                  isAssistant
-                    ? 'bg-[#101626]/80 border border-gray-800 text-gray-200'
-                    : 'bg-blue-600/20 border border-blue-500/30 text-cyan-100'
-                }`}
-              >
-                {/* Bot Icon Tag for Assist */}
-                {isAssistant && (
-                  <div className="flex items-center gap-1.5 text-cyan-400 font-semibold mb-1.5 font-mono text-[10px]">
-                    <Sparkles className="w-3 h-3 text-cyan-400" />
-                    <span>AI RECRUITER ASSISTANT</span>
-                  </div>
-                )}
-                <div className="whitespace-pre-wrap select-text">{msg.content}</div>
-                <div className="text-right text-[9px] text-gray-500 mt-1 font-mono">{msg.timestamp}</div>
+              Ask AI ✨
+            </motion.span>
+
+            <button
+              onClick={() => setIsOpen(true)}
+              className="relative bg-[#64ffda] text-[#0a192f] p-4 rounded-full shadow-lg shadow-[#64ffda]/25 hover:shadow-[#64ffda]/50 hover:scale-110 transition-all cursor-pointer"
+              aria-label="Open AI chat"
+            >
+              {/* Pulse ring */}
+              <span className="absolute inset-0 rounded-full bg-[#64ffda]/30 animate-ping" />
+              <MessageCircle className="w-6 h-6 relative z-10" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Chat panel */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] bg-[#112240] border border-[#1d3461] rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            style={{ height: '480px' }}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-[#1d3461]">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-[#64ffda]/10 flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-[#64ffda]" />
+                </div>
+                <div>
+                  <span className="text-sm font-medium text-[#ccd6f6]">AI Assistant</span>
+                  <span className="block text-[10px] text-[#8892b0]">Ask about Vishv's work</span>
+                </div>
               </div>
-            </motion.div>
-          );
-        })}
-
-        {/* Typing Loader Indicator */}
-        {isLoading && (
-          <div className="flex justify-start">
-            <div className="bg-[#101626]/80 border border-gray-800 rounded-2xl p-4 flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-cyan-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-              <span className="w-2 h-2 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="w-2 h-2 rounded-full bg-purple-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+              <button
+                onClick={() => setIsOpen(false)}
+                className="text-[#8892b0] hover:text-[#ccd6f6] p-1 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-          </div>
-        )}
 
-        {/* Error Notification */}
-        {error && (
-          <div className="bg-red-500/10 border border-red-500/20 text-red-200 p-3.5 rounded-xl flex items-start gap-2.5 text-xs">
-            <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="font-bold">System Connection Timeout</p>
-              <p className="text-gray-400 mt-0.5">{error}</p>
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto scrollbar-none p-4 space-y-3">
+              {messages.map((msg, index) => {
+                const isAssistant = msg.role === 'assistant';
+                return (
+                  <div
+                    key={index}
+                    className={`flex ${isAssistant ? 'justify-start' : 'justify-end'}`}
+                  >
+                    <div
+                      className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-sm leading-relaxed ${
+                        isAssistant
+                          ? 'bg-[#0a192f] text-[#ccd6f6] border border-[#1d3461]'
+                          : 'bg-[#64ffda]/10 text-[#64ffda] border border-[#64ffda]/20'
+                      }`}
+                    >
+                      <p className="text-[13px]">{msg.content}</p>
+                      <span className="text-[9px] text-[#8892b0]/60 mt-1 block text-right">
+                        {msg.timestamp}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Loading indicator */}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-[#0a192f] border border-[#1d3461] rounded-xl px-4 py-3">
+                    <div className="flex gap-1.5">
+                      <span className="w-1.5 h-1.5 bg-[#64ffda]/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-1.5 h-1.5 bg-[#64ffda]/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-1.5 h-1.5 bg-[#64ffda]/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Error */}
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/20 text-red-300 rounded-xl px-3.5 py-2.5 text-xs">
+                  {error}
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
             </div>
-          </div>
+
+            {/* Input */}
+            <form onSubmit={handleFormSubmit} className="p-3 border-t border-[#1d3461]">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder="Ask me anything..."
+                  className="flex-1 bg-[#0a192f] border border-[#1d3461] rounded-lg px-3 py-2.5 text-sm text-[#ccd6f6] placeholder-[#8892b0]/50 focus:outline-none focus:border-[#64ffda]/40 transition-colors"
+                  disabled={isLoading}
+                />
+                <button
+                  type="submit"
+                  disabled={isLoading || !inputValue.trim()}
+                  className="bg-[#64ffda]/10 text-[#64ffda] p-2.5 rounded-lg hover:bg-[#64ffda]/20 disabled:opacity-30 transition-colors cursor-pointer"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-[9px] text-[#8892b0]/40 mt-1.5 text-center">
+                AI demo — responses based on portfolio data
+              </p>
+            </form>
+          </motion.div>
         )}
-
-        <div ref={messagesEndRef} />
-      </div>
-
-      {/* Chat Input Bar */}
-      <form onSubmit={handleFormSubmit} className="flex gap-2.5">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Ask Vishv's AI Twin anything..."
-          disabled={isLoading}
-          className="flex-1 bg-[#060a12]/80 border border-gray-800/80 rounded-xl px-4 py-3 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition-colors"
-        />
-        <button
-          type="submit"
-          disabled={isLoading || !inputValue.trim()}
-          className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl px-4 py-3 flex items-center justify-center hover:opacity-90 disabled:opacity-50 transition-opacity cursor-pointer"
-        >
-          <Send className="w-4 h-4" />
-        </button>
-      </form>
-    </div>
+      </AnimatePresence>
+    </>
   );
 }

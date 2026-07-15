@@ -1,46 +1,41 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  Github, 
-  Linkedin, 
-  Mail, 
-  Terminal, 
-  ArrowRight, 
-  Code2, 
-  Cpu, 
-  Database, 
-  CheckCircle, 
-  FileText, 
-  Send, 
-  Sparkles, 
-  Award, 
-  VolumeX, 
-  Volume2, 
-  Trophy,
+import {
+  Github,
+  Linkedin,
+  Mail,
+  ArrowRight,
   ArrowUp,
-  Workflow,
-  Smartphone,
-  RefreshCw
+  Download,
+  Send,
+  RefreshCw,
+  Award,
+  Sparkles,
+  Menu,
+  X,
+  ExternalLink,
+  MapPin,
+  GraduationCap,
+  Briefcase,
+  Code,
+  Layout,
+  Database,
+  Globe
 } from 'lucide-react';
 
-// Custom data & types
-import { PERSONAL_INFO, PORTFOLIO_STATS, TIMELINE_DATA } from './data';
+import { PERSONAL_INFO, SKILLS_DATA } from './data';
 
-// Components
 import BackgroundCanvas from './components/BackgroundCanvas';
 import LoadingScreen from './components/LoadingScreen';
-import SkillsEcosystem from './components/SkillsEcosystem';
 import ProjectShowcase from './components/ProjectShowcase';
 import CertCardStack from './components/CertCardStack';
 import AITwinChat from './components/AITwinChat';
-import StoryScroll from './components/StoryScroll';
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [activeRoleIdx, setActiveRoleIdx] = useState(0);
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const [secretCount, setSecretCount] = useState(0);
-  const [isEasterEggUnlocked, setIsEasterEggUnlocked] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Contact form state
   const [formName, setFormName] = useState('');
@@ -48,696 +43,581 @@ export default function App() {
   const [formMsg, setFormMsg] = useState('');
   const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success'>('idle');
 
-  // Rotate hero taglines every 3 seconds
+  // Rotate taglines
   useEffect(() => {
-    if (loading) return;
     const interval = setInterval(() => {
       setActiveRoleIdx((prev) => (prev + 1) % PERSONAL_INFO.taglines.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, [loading]);
+  }, []);
 
-  // Monitor scrolling to show Back to Top button
+  // Force scroll to top on load/refresh
   useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 500);
-    };
+    window.scrollTo(0, 0);
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, []);
+
+  // Scroll-to-top button
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 500);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Developer Easter Egg console log greetings
-  useEffect(() => {
-    console.log(
-      "%c>> SYSTEM CONFIGURATION LOADED <<", 
-      "color: #22d3ee; font-family: monospace; font-size: 14px; font-weight: bold;"
-    );
-    console.log(
-      "%cVishv Patel - Portfolio Core v1.0.4 initialized.\nMinor: Mechatronics | CGPA: 7.62\nRecruiters, type 'konami' or click the mechatronic circuit node 5 times for a secret debugging tool!",
-      "color: #a855f7; font-family: monospace; font-size: 12px;"
-    );
-  }, []);
-
-  const handleSecretClick = () => {
-    const next = secretCount + 1;
-    setSecretCount(next);
-    if (next >= 5) {
-      setIsEasterEggUnlocked(true);
-      setSecretCount(0);
-    }
-  };
-
-  const handleContactSubmit = (e: FormEvent) => {
+  // Contact form handler
+  const handleContactSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!formName || !formEmail || !formMsg) return;
-
     setFormStatus('sending');
-    // Simulate API database persistence delay
-    setTimeout(() => {
+
+    try {
+      const accessKey = import.meta.env.VITE_WEB3FORMS_KEY;
+      if (!accessKey) {
+        window.location.href = `mailto:vishvpatel7005@gmail.com?subject=Portfolio Contact from ${formName}&body=${encodeURIComponent(formMsg)}%0A%0AFrom: ${formName} (${formEmail})`;
+        setFormStatus('success');
+        setFormName(''); setFormEmail(''); setFormMsg('');
+        setTimeout(() => setFormStatus('idle'), 4000);
+        return;
+      }
+
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: formName,
+          email: formEmail,
+          message: formMsg,
+          subject: `Portfolio Contact: ${formName}`,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setFormStatus('success');
+        setFormName(''); setFormEmail(''); setFormMsg('');
+      } else {
+        throw new Error('Submission failed');
+      }
+    } catch {
+      window.location.href = `mailto:vishvpatel7005@gmail.com?subject=Portfolio Contact from ${formName}&body=${encodeURIComponent(formMsg)}`;
       setFormStatus('success');
-      setFormName('');
-      setFormEmail('');
-      setFormMsg('');
-      setTimeout(() => setFormStatus('idle'), 4000);
-    }, 1200);
+      setFormName(''); setFormEmail(''); setFormMsg('');
+    }
+    setTimeout(() => setFormStatus('idle'), 4000);
   };
+
+  // Group skills by category for the resume-style display
+  const skillsByCategory = SKILLS_DATA.reduce((acc, skill) => {
+    if (!acc[skill.category]) acc[skill.category] = [];
+    acc[skill.category].push(skill);
+    return acc;
+  }, {} as Record<string, typeof SKILLS_DATA>);
+
+  const NAV_LINKS = [
+    { label: 'About', href: '#about' },
+    { label: 'Skills', href: '#skills' },
+    { label: 'Projects', href: '#projects' },
+    { label: 'Contact', href: '#contact' },
+  ];
 
   return (
     <>
-      {/* Cinematic Custom Loader */}
-      <AnimatePresence>
-        {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+      {/* Loading Screen */}
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <LoadingScreen onComplete={() => setIsLoading(false)} />
+        )}
       </AnimatePresence>
 
-      {!loading && (
-        <div className="min-h-screen bg-[#050505] text-slate-100 font-sans relative overflow-hidden selection:bg-cyan-500/30 selection:text-cyan-200">
-          
-          {/* Constellation Live Interactive Particle Canvas */}
-          <BackgroundCanvas />
+      <div className="relative min-h-screen bg-[#0a192f] text-[#ccd6f6] overflow-x-hidden">
+        <BackgroundCanvas />
 
-          {/* Background Ambient Mesh Gradients matching the design layout */}
-          <div className="absolute inset-0 pointer-events-none opacity-40 z-0 overflow-hidden">
-            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-900/20 blur-[130px]" />
-            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-900/15 blur-[130px]" />
-            <div className="absolute top-[30%] right-[10%] w-[35%] h-[35%] rounded-full bg-cyan-900/15 blur-[120px]" />
-            {/* Soft grid background overlay */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:45px_45px]" />
+        {/* ─── NAVIGATION ─── */}
+        <nav className="fixed top-0 left-0 right-0 z-40 bg-[#0a192f]/80 backdrop-blur-lg border-b border-[#64ffda]/5">
+          <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#" className="text-xl font-semibold text-[#ccd6f6] hover:text-[#64ffda] transition-colors">
+              vishv<span className="text-[#64ffda]">.</span>
+            </a>
+
+            {/* Desktop nav */}
+            <div className="hidden sm:flex items-center gap-7">
+              {NAV_LINKS.map((link, i) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="text-sm text-[#8892b0] hover:text-[#64ffda] transition-colors"
+                >
+                  <span className="text-[#64ffda] font-mono text-xs mr-1">0{i + 1}.</span>
+                  {link.label}
+                </a>
+              ))}
+              <a
+                href={PERSONAL_INFO.resumeUrl}
+                download
+                className="text-sm text-[#64ffda] border border-[#64ffda]/40 px-4 py-1.5 rounded hover:bg-[#64ffda]/10 transition-colors"
+              >
+                Resume
+              </a>
+            </div>
+
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="sm:hidden text-[#64ffda] p-2 cursor-pointer"
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
 
-          {/* Navigation Bar / Header */}
-          <header className="sticky top-0 z-40 bg-[#050505]/60 backdrop-blur-md border-b border-white/5 px-6 py-4">
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
-              
-              {/* Logo icon */}
-              <a href="#hero" className="flex items-center space-x-2.5 group">
-                <div className="w-8 h-8 rounded bg-gradient-to-br from-blue-500 via-cyan-400 to-purple-500 flex items-center justify-center font-black text-black text-sm group-hover:scale-105 transition-transform duration-300">
-                  VP
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-bold tracking-widest text-xs text-gray-100 uppercase">
-                    VISHV PATEL
-                  </span>
-                  <span className="text-[9px] text-gray-500 tracking-wider font-mono">
-                    CS_ENG // MECHATRONICS
-                  </span>
-                </div>
-              </a>
-
-              {/* Central Nav Menu */}
-              <nav className="hidden md:flex items-center space-x-8 text-[10px] uppercase tracking-[0.2em] font-semibold text-slate-400">
-                <a href="#about" className="hover:text-cyan-400 transition-colors">Who I Am</a>
-                <a href="#skills" className="hover:text-cyan-400 transition-colors">Tech Ecosystem</a>
-                <a href="#projects" className="hover:text-cyan-400 transition-colors">Products</a>
-                <a href="#certifications" className="hover:text-cyan-400 transition-colors">Credentials</a>
-                <a href="#chat" className="hover:text-cyan-400 transition-colors">AI Twin</a>
-                <a href="#contact" className="hover:text-cyan-400 transition-colors">Contact</a>
-              </nav>
-
-              {/* Live status badge */}
-              <div 
-                onClick={handleSecretClick}
-                className="bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center space-x-2 text-[9px] uppercase tracking-wider font-mono cursor-pointer select-none hover:bg-white/10 active:scale-95 transition-all"
-              >
-                <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
-                <span className="text-gray-300">Available For Innovation</span>
-              </div>
-            </div>
-          </header>
-
-          {/* Easter Egg Overlay Console */}
+          {/* Mobile menu */}
           <AnimatePresence>
-            {isEasterEggUnlocked && (
+            {isMobileMenuOpen && (
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#030611]/90 backdrop-blur-xl"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="sm:hidden bg-[#112240] border-t border-[#1d3461]/30 overflow-hidden"
               >
-                <div className="bg-[#0b101d] border border-cyan-500/30 rounded-2xl p-6 max-w-lg w-full font-mono text-xs text-cyan-400 relative">
-                  <button 
-                    onClick={() => setIsEasterEggUnlocked(false)}
-                    className="absolute top-4 right-4 text-gray-500 hover:text-white font-bold text-lg"
+                <div className="px-6 py-4 space-y-3">
+                  {NAV_LINKS.map((link) => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="block text-sm text-[#8892b0] hover:text-[#64ffda] transition-colors py-2"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                  <a
+                    href={PERSONAL_INFO.resumeUrl}
+                    download
+                    className="block text-sm text-[#64ffda] border border-[#64ffda]/40 px-4 py-2 rounded text-center hover:bg-[#64ffda]/10 transition-colors mt-2"
                   >
-                    ×
-                  </button>
-                  <div className="flex items-center gap-2 mb-4 border-b border-gray-800 pb-3">
-                    <Terminal className="w-5 h-5 text-cyan-400" />
-                    <span className="font-bold text-gray-200">VP_SYSTEM_DECRYPTED: SUCCESS</span>
-                  </div>
-                  <pre className="text-[9px] text-gray-400 leading-normal overflow-x-auto bg-[#050812] p-3 rounded-lg mb-4">
-{`   _____               __            
-  / ___/___  _________/ /____  ____  
-  \\__ \\/ _ \\/ ___/ ___/ __/ _ \\/ __ \\ 
- ___/ /  __/ /__/ /  / /_/  __/ / / / 
-/____/\\___/\\___/_/   \\__/\\___/_/ /_/  
-                                      
-  * PORTFOLIO STATUS: UNLOCKED
-  * ACCESSIBILITY CORE: REDUCED MOTION SAFE
-  * PRESET CACHES: ACTIVE
-  * MECHATRONICS OVERRIDE: OK`}
-                  </pre>
-                  <p className="text-gray-300 mb-4 leading-relaxed">
-                    Welcome to the engineering sandbox. You have unlocked Vishv's terminal portal. Every component in this portfolio is crafted with production grade React 19 and Tailwind CSS utility states.
-                  </p>
-                  <div className="space-y-2 text-[11px] text-gray-400">
-                    <div className="flex justify-between">
-                      <span>Server Engine Host</span>
-                      <span className="text-purple-400">Express / Node.js</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>LLM Orchestration</span>
-                      <span className="text-purple-400">@google/genai SDK v2.4.0</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>State Physics</span>
-                      <span className="text-purple-400">Motion & custom springs</span>
-                    </div>
-                  </div>
+                    Resume
+                  </a>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
+        </nav>
 
-          {/* Major Container */}
-          <main className="relative z-10 max-w-7xl mx-auto px-6 space-y-32 pb-24">
 
-            {/* 1. HERO SECTION */}
-            <section id="hero" className="min-h-[calc(100vh-140px)] flex flex-col justify-center py-12">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                
-                {/* Hero left content */}
-                <div className="lg:col-span-7 space-y-6">
-                  <div className="inline-block px-3 py-1 bg-blue-500/10 text-cyan-400 text-[10px] font-bold rounded-full uppercase tracking-widest border border-blue-500/20 italic">
-                    Computer Science Engineering
-                  </div>
+        {/* ─── HERO ─── */}
+        <section className="min-h-screen flex items-center relative z-10 px-6">
+          <div className="max-w-5xl mx-auto w-full pt-10 sm:pt-0">
 
-                  <div className="space-y-2">
-                    <span className="text-xs font-mono tracking-[0.25em] text-gray-500 uppercase block">
-                      Welcome To My World
-                    </span>
-                    <h1 className="text-5xl sm:text-7xl font-black tracking-tight leading-[0.95]">
-                      VISHV<br/>
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-400">
-                        PATEL
-                      </span>
-                    </h1>
-                  </div>
-
-                  {/* Rotating tagline indicator */}
-                  <div className="h-10 flex items-center">
-                    <AnimatePresence mode="wait">
-                      <motion.p
-                        key={activeRoleIdx}
-                        initial={{ opacity: 0, y: 15 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -15 }}
-                        transition={{ duration: 0.35, ease: 'easeOut' }}
-                        className="text-lg sm:text-xl font-mono text-cyan-400 font-bold"
-                      >
-                        // {PERSONAL_INFO.taglines[activeRoleIdx]}
-                      </motion.p>
-                    </AnimatePresence>
-                  </div>
-
-                  <p className="text-slate-400 text-sm sm:text-base font-light max-w-lg leading-relaxed">
-                    {PERSONAL_INFO.bio}
-                  </p>
-
-                  {/* Call to Actions */}
-                  <div className="flex flex-wrap gap-4 pt-3">
-                    <a 
-                      href="#about"
-                      className="bg-white text-black hover:bg-gray-100 px-6 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-lg cursor-pointer inline-flex items-center gap-2 group"
-                    >
-                      <span>Explore My Journey</span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </a>
-                    
-                    <a 
-                      href="#projects"
-                      className="bg-white/5 hover:bg-white/10 text-white border border-white/10 px-6 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer inline-flex items-center gap-2"
-                    >
-                      <span>View Projects</span>
-                    </a>
-                  </div>
-
-                  {/* Social media connections */}
-                  <div className="pt-6 border-t border-gray-800/40 max-w-lg flex flex-wrap gap-5 text-gray-500">
-                    <a 
-                      href={PERSONAL_INFO.github} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="hover:text-cyan-400 transition-colors flex items-center gap-1.5 text-xs font-mono"
-                    >
-                      <Github className="w-4 h-4" />
-                      <span>GitHub</span>
-                    </a>
-                    <a 
-                      href={PERSONAL_INFO.linkedin} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="hover:text-cyan-400 transition-colors flex items-center gap-1.5 text-xs font-mono"
-                    >
-                      <Linkedin className="w-4 h-4" />
-                      <span>LinkedIn</span>
-                    </a>
-                    <a 
-                      href={`mailto:${PERSONAL_INFO.email}`} 
-                      className="hover:text-cyan-400 transition-colors flex items-center gap-1.5 text-xs font-mono"
-                    >
-                      <Mail className="w-4 h-4" />
-                      <span>Email</span>
-                    </a>
-                  </div>
-                </div>
-
-                {/* Hero right: Dynamic Bento Overview Card */}
-                <div className="lg:col-span-5 relative">
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-blue-500/10 blur-[80px] pointer-events-none" />
-                  
-                  <div className="bg-gradient-to-br from-[#0c1322] to-[#040710] border border-blue-900/30 rounded-2xl p-6 shadow-2xl backdrop-blur-xl space-y-6 relative overflow-hidden">
-                    <div className="absolute top-4 right-4 text-xs font-mono text-gray-600">
-                      SYS_LOAD: 0.12
-                    </div>
-
-                    <div className="space-y-2">
-                      <span className="text-[10px] text-cyan-400 font-bold border border-cyan-400/30 px-2 py-0.5 rounded uppercase tracking-wider font-mono">
-                        Profile Summary
-                      </span>
-                      <h3 className="text-xl font-bold text-gray-100">Navrachana University</h3>
-                      <p className="text-xs text-gray-400">Vadodara, Gujarat, India</p>
-                    </div>
-
-                    {/* Educational quick highlights */}
-                    <div className="space-y-3 text-xs border-t border-gray-800/80 pt-4">
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">B.Tech Degree Plan</span>
-                        <span className="font-bold text-cyan-400">2023 - 2027</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">CGPA (Sem VI)</span>
-                        <span className="font-bold text-cyan-400">7.62 / 10</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">Minor Track</span>
-                        <span className="font-bold text-purple-400">Mechatronics Eng.</span>
-                      </div>
-                    </div>
-
-                    <div className="bg-[#050811] rounded-xl p-4 border border-gray-800/60 flex items-center gap-3">
-                      <Cpu className="w-5 h-5 text-purple-400 flex-shrink-0" />
-                      <p className="text-[11px] text-gray-400 leading-relaxed">
-                        Mechatronics minor bridges heavy automation structures, PLC controllers, and microcontroller firmware with modern full stack systems.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </section>
-
-            {/* 2. STORY SCROLL & ABOUT ME */}
-            <section id="about" className="space-y-12 scroll-mt-24">
-              <div className="space-y-2">
-                <span className="text-xs font-mono text-purple-400 uppercase tracking-widest block font-bold">
-                  01 // The Storyteller
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                  Who I Am & Engineering Mindset
-                </h2>
-              </div>
-
-              {/* Dynamic scrolling timeline and stats card */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                
-                {/* Mindset Pillars column */}
-                <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {[
-                    {
-                      title: "Hardware-Software Synergy",
-                      desc: "Bridging physical mechatronics sensors and controllers with production-grade web systems.",
-                      icon: Cpu,
-                      color: "text-cyan-400"
-                    },
-                    {
-                      title: "AI & Data Automation",
-                      desc: "Building pipelines to process unstructured dossiers, train custom intent classifiers, and serve smart responses.",
-                      icon: Database,
-                      color: "text-purple-400"
-                    },
-                    {
-                      title: "Modular Craftsmanship",
-                      desc: "Enforcing rigorous version control hygiene, reusable component models, and low-latency API layers.",
-                      icon: Code2,
-                      color: "text-blue-400"
-                    },
-                    {
-                      title: "Cloud Infrastructure",
-                      desc: "Architecting virtual private environments, data logs, and scalable SageMaker pipelines.",
-                      icon: Workflow,
-                      color: "text-emerald-400"
-                    }
-                  ].map((pillar, idx) => {
-                    const IconComp = pillar.icon;
-                    return (
-                      <div 
-                        key={idx}
-                        className="bg-[#0b101c]/80 border border-gray-800/80 p-5 rounded-2xl shadow-lg relative overflow-hidden group hover:border-gray-700/60 transition-all duration-300 flex flex-col justify-between"
-                      >
-                        <div className="absolute top-0 left-0 w-1 h-full bg-cyan-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300" />
-                        
-                        <div className="flex justify-between items-start mb-3">
-                          <div className={`p-2 rounded-lg bg-white/[0.02] ${pillar.color} border border-white/5`}>
-                            <IconComp className="w-5 h-5" />
-                          </div>
-                          <span className="text-[10px] font-mono text-gray-600">PILLAR 0{idx + 1}</span>
-                        </div>
-                        
-                        <div>
-                          <h4 className="text-xs font-bold font-mono tracking-tight text-gray-100 group-hover:text-cyan-400 transition-colors leading-tight mb-1">
-                            {pillar.title}
-                          </h4>
-                          <p className="text-[11px] text-gray-400 leading-normal font-sans">
-                            {pillar.desc}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Narrative description & target philosophy */}
-                <div className="lg:col-span-7 space-y-6">
-                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed font-sans">
-                    I believe that top-tier software systems aren't built on isolated codes—they're engineered to resolve structural limits. Fusing a core computer science foundation with mechatronics automation has taught me to design software that behaves reliably under scale.
-                  </p>
-                  
-                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed font-sans">
-                    Whether training NLP parsers to read scanned PDF dossiers, automating multi-tenant billing ledgers in relational databases, or compiling mobile chess engines, I approach every project with strict discipline around clean version controls (100+ collaborative commits), performance caching, and modular reuse patterns.
-                  </p>
-
-                  <div className="p-4 bg-[#090e18]/80 border border-gray-800/80 rounded-2xl flex items-start gap-3.5">
-                    <Award className="w-5 h-5 text-cyan-400 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <h4 className="text-xs font-bold font-mono tracking-wider text-gray-200 uppercase">
-                        Continuous Professional Training
-                      </h4>
-                      <p className="text-xs text-gray-400 mt-1 leading-relaxed">
-                        Holding 3 official AWS Cloud Academy accreditations in Cloud Foundations, Machine Learning, and Data Engineering pipelines.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Story Scroll Vertical Roadmap */}
-              <div className="border-t border-gray-800/80 pt-12">
-                <StoryScroll />
-              </div>
-            </section>
-
-            {/* 3. TECHNOLOGY ECOSYSTEM (SKILLS) */}
-            <section id="skills" className="space-y-12 scroll-mt-24">
-              <div className="space-y-2">
-                <span className="text-xs font-mono text-purple-400 uppercase tracking-widest block font-bold">
-                  02 // Engineering Armament
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                  Technology Ecosystem
-                </h2>
-              </div>
-
-              <SkillsEcosystem />
-            </section>
-
-            {/* 4. FEATURED PRODUCTS (PROJECTS) */}
-            <section id="projects" className="space-y-12 scroll-mt-24">
-              <div className="space-y-2">
-                <span className="text-xs font-mono text-purple-400 uppercase tracking-widest block font-bold">
-                  03 // Production Implementations
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                  Featured Projects
-                </h2>
-              </div>
-
-              <ProjectShowcase />
-            </section>
-
-            {/* 5. CERTIFICATIONS SECTION */}
-            <section id="certifications" className="space-y-12 scroll-mt-24">
-              <div className="space-y-2">
-                <span className="text-xs font-mono text-purple-400 uppercase tracking-widest block font-bold">
-                  04 // Credentials & Achievements
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                  AWS Credentials & Achievements
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                
-                {/* Information cards */}
-                <div className="lg:col-span-5 space-y-6">
-                  <div className="space-y-4">
-                    <span className="text-[10px] text-cyan-400 font-bold border border-cyan-400/30 px-2.5 py-1 rounded font-mono uppercase tracking-widest block w-fit">
-                      AWS Academy Certified Graduate
-                    </span>
-                    <h3 className="text-2xl font-bold text-gray-100 tracking-tight">
-                      Architecting cloud pipelines & ML workflows
-                    </h3>
-                    <p className="text-xs sm:text-sm text-gray-400 leading-relaxed font-sans">
-                      My official Amazon Web Services certifications validate proficiency in building secure, resilient virtual private clouds, configuring identity access gates, and processing data logs at scale.
-                    </p>
-                  </div>
-
-                  <div className="space-y-3 font-mono text-xs text-gray-400">
-                    <div className="flex gap-2.5 items-center">
-                      <CheckCircle className="w-4 h-4 text-cyan-400 flex-shrink-0" />
-                      <span>AWS Glue, EMR & S3 Data Lakes</span>
-                    </div>
-                    <div className="flex gap-2.5 items-center">
-                      <CheckCircle className="w-4 h-4 text-cyan-400 flex-shrink-0" />
-                      <span>SageMaker predictive model training</span>
-                    </div>
-                    <div className="flex gap-2.5 items-center">
-                      <CheckCircle className="w-4 h-4 text-cyan-400 flex-shrink-0" />
-                      <span>EC2 security isolation & load balancing</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Beautiful dynamic fan stack */}
-                <div className="lg:col-span-7">
-                  <CertCardStack />
-                </div>
-
-              </div>
-            </section>
-
-            {/* 6. AI TWIN PORTAL CHAT */}
-            <section id="chat" className="space-y-12 scroll-mt-24">
-              <div className="space-y-2">
-                <span className="text-xs font-mono text-purple-400 uppercase tracking-widest block font-bold">
-                  05 // Recruiter Agent Portal
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                  Speak To My AI Twin
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                
-                {/* Description info */}
-                <div className="lg:col-span-5 space-y-6">
-                  <div className="space-y-4">
-                    <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-sans">
-                      Can't wait to review my full code repository? Test my digital clone in real-time.
-                    </p>
-                    <p className="text-xs sm:text-sm text-gray-400 leading-relaxed font-sans">
-                      Powered server-side by the advanced **Gemini 3.5 Flash** LLM system, this AI twin is customized with knowledge of my development logs, university curriculum, mechatronic minor details, and individual project specifications.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Main Interactive Chat Frame */}
-                <div className="lg:col-span-7">
-                  <AITwinChat />
-                </div>
-
-              </div>
-            </section>
-
-            {/* 7. CONTACT & LET'S BUILD */}
-            <section id="contact" className="space-y-12 scroll-mt-24">
-              <div className="space-y-2">
-                <span className="text-xs font-mono text-purple-400 uppercase tracking-widest block font-bold">
-                  06 // Let's Collaborate
-                </span>
-                <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-                  Build Something Amazing
-                </h2>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                
-                {/* Detail lists */}
-                <div className="lg:col-span-5 space-y-6">
-                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-sans">
-                    Have an interesting engineering challenge, a full-stack project, or a technical role to discuss? Get in touch directly using this persistent glassmorphic form.
-                  </p>
-
-                  <div className="space-y-4 font-mono text-xs text-gray-400">
-                    <div className="flex items-center gap-3">
-                      <Mail className="w-4 h-4 text-cyan-400" />
-                      <span>vishvpatel7005@gmail.com</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <Mail className="w-4 h-4 text-cyan-400" />
-                      <span>+91 8488045303</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="w-4 h-4 text-cyan-400" />
-                      <span>Vadodara, Gujarat, India</span>
-                    </div>
-                  </div>
-
-                  <div className="p-4 bg-white/[0.02] border border-gray-800 rounded-2xl text-[10px] text-gray-500 font-mono leading-relaxed">
-                    Form operations are buffered server-side. Messages are compiled with timestamps and logged successfully for direct review.
-                  </div>
-                </div>
-
-                {/* Form wrapper */}
-                <div className="lg:col-span-7">
-                  <div className="bg-[#0b101c]/90 border border-blue-900/40 rounded-2xl p-6 backdrop-blur-xl relative overflow-hidden">
-                    
-                    <form onSubmit={handleContactSubmit} className="space-y-4 font-sans text-xs sm:text-sm">
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] uppercase tracking-wider text-gray-500 font-mono font-bold">
-                            Full Name
-                          </label>
-                          <input 
-                            type="text" 
-                            required
-                            value={formName}
-                            onChange={(e) => setFormName(e.target.value)}
-                            placeholder="John Doe"
-                            className="w-full bg-[#050912]/80 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-cyan-500 transition-colors"
-                          />
-                        </div>
-                        <div className="space-y-1.5">
-                          <label className="text-[10px] uppercase tracking-wider text-gray-500 font-mono font-bold">
-                            Email Address
-                          </label>
-                          <input 
-                            type="email" 
-                            required
-                            value={formEmail}
-                            onChange={(e) => setFormEmail(e.target.value)}
-                            placeholder="john@example.com"
-                            className="w-full bg-[#050912]/80 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-cyan-500 transition-colors"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <label className="text-[10px] uppercase tracking-wider text-gray-500 font-mono font-bold">
-                          Project Brief / Message
-                        </label>
-                        <textarea 
-                          required
-                          rows={4}
-                          value={formMsg}
-                          onChange={(e) => setFormMsg(e.target.value)}
-                          placeholder="Tell me about your product specifications or scheduling requests..."
-                          className="w-full bg-[#050912]/80 border border-gray-800 rounded-xl px-4 py-3 text-gray-100 placeholder-gray-600 focus:outline-none focus:border-cyan-500 transition-colors resize-none"
-                        />
-                      </div>
-
-                      {/* Success block */}
-                      <AnimatePresence>
-                        {formStatus === 'success' && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0 }}
-                            className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 p-4 rounded-xl text-xs font-mono"
-                          >
-                            ✓ Message logged successfully. Thank you for getting in touch! I will answer you shortly.
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-
-                      <button
-                        type="submit"
-                        disabled={formStatus === 'sending'}
-                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 text-white rounded-xl py-3.5 text-xs font-bold uppercase tracking-wider transition-opacity cursor-pointer flex items-center justify-center gap-2"
-                      >
-                        {formStatus === 'sending' ? (
-                          <>
-                            <RefreshCw className="w-4 h-4 animate-spin" />
-                            <span>Dispatching parameters...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Send className="w-4 h-4" />
-                            <span>Transmit Message</span>
-                          </>
-                        )}
-                      </button>
-                    </form>
-
-                  </div>
-                </div>
-
-              </div>
-            </section>
-
-          </main>
-
-          {/* Persistent Footer */}
-          <footer className="border-t border-white/5 py-12 px-6 bg-[#03060c] relative z-10 text-gray-500 font-mono text-[10px]">
-            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6">
-              
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center font-bold text-black text-xs">
-                  VP
-                </div>
-                <span>© 2026 Vishv Patel. All rights reserved.</span>
-              </div>
-
-              <div className="flex gap-6 text-xs font-medium text-slate-400">
-                <a href="#about" className="hover:text-cyan-400 transition-colors">About</a>
-                <a href="#projects" className="hover:text-cyan-400 transition-colors">Projects</a>
-                <a href="#chat" className="hover:text-cyan-400 transition-colors">AI Core</a>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                <span>BUILD_v1.0.4_NODE</span>
-              </div>
-
-            </div>
-          </footer>
-
-          {/* Floating Back to Top Button */}
-          <AnimatePresence>
-            {showScrollTop && (
-              <motion.button
+            {/* Intro */}
+            <div>
+              <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="fixed bottom-6 right-6 bg-[#0b101c] border border-gray-800 p-3 rounded-full text-cyan-400 shadow-2xl hover:border-cyan-400 transition-all z-40 cursor-pointer"
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="text-[#64ffda] font-mono text-sm mb-5"
               >
-                <ArrowUp className="w-4 h-4" />
-              </motion.button>
-            )}
-          </AnimatePresence>
+                Hi, I am
+              </motion.p>
 
+              <motion.h1
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="text-5xl sm:text-6xl lg:text-7xl font-bold text-[#ccd6f6] mb-3 tracking-tight"
+              >
+                Vishv Patel.
+              </motion.h1>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="h-14 sm:h-16 overflow-hidden mb-6"
+              >
+                <h2
+                  key={activeRoleIdx}
+                  className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#8892b0]/70 tracking-tight"
+                >
+                  {PERSONAL_INFO.taglines[activeRoleIdx]}
+                </h2>
+              </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="text-[#8892b0] max-w-lg text-base leading-relaxed"
+              >
+                Computer Science Engineering student at Navrachana University, building
+                production-grade full-stack applications, AI-powered systems, and cross-platform mobile experiences.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 }}
+                className="mt-8 flex flex-wrap gap-4"
+              >
+                <a
+                  href="#projects"
+                  className="inline-flex items-center gap-2 text-[#64ffda] border border-[#64ffda]/40 px-6 py-3 rounded text-sm font-mono hover:bg-[#64ffda]/10 transition-colors"
+                >
+                  View Projects <ArrowRight className="w-4 h-4" />
+                </a>
+                <a
+                  href={PERSONAL_INFO.resumeUrl}
+                  download
+                  className="inline-flex items-center gap-2 text-[#8892b0] border border-[#8892b0]/20 px-6 py-3 rounded text-sm font-mono hover:text-[#64ffda] hover:border-[#64ffda]/30 transition-colors"
+                >
+                  <Download className="w-4 h-4" /> Resume
+                </a>
+              </motion.div>
+            </div>
+
+
+          </div>
+        </section>
+
+
+        {/* ─── ABOUT ─── */}
+        <section id="about" className="relative z-10 py-20 sm:py-28 px-6 scroll-mt-20">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="mb-10"
+            >
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#ccd6f6] flex items-center gap-3">
+                <span className="text-[#64ffda] font-mono text-lg">01.</span>
+                About Me
+                <span className="hidden sm:block h-px bg-[#1d3461] flex-1 ml-4" />
+              </h2>
+            </motion.div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+              {/* Left — narrative */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="lg:col-span-5 space-y-5"
+              >
+                <p className="text-[#8892b0] leading-relaxed">
+                  I'm a B.Tech Computer Science Engineering student at Navrachana University (2023–2027)
+                  with a minor in Mechatronics — bridging hardware automation with modern software systems.
+                </p>
+                <p className="text-[#8892b0] leading-relaxed">
+                  My work spans full-stack web applications, cross-platform mobile development with Flutter,
+                  and AI/ML pipelines for processing real-world data — from training NLP models to building responsive admin dashboards.
+                </p>
+
+                {/* Full profile card integrated into About section */}
+                <div className="bg-[#112240]/60 border border-[#1d3461]/40 rounded-xl p-6 mt-8 space-y-4">
+                  <div className="flex items-center gap-4 pb-4 border-b border-[#1d3461]/30">
+                    <div className="w-10 h-10 rounded-lg bg-[#64ffda]/10 border border-[#64ffda]/15 flex items-center justify-center flex-shrink-0">
+                      <GraduationCap className="w-5 h-5 text-[#64ffda]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[#ccd6f6]">B.Tech Computer Science & Engineering</p>
+                      <p className="text-xs text-[#8892b0]">Navrachana University • 2023–2027 • CGPA: 7.62</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 pb-4 border-b border-[#1d3461]/30">
+                    <div className="w-10 h-10 rounded-lg bg-[#64ffda]/10 border border-[#64ffda]/15 flex items-center justify-center flex-shrink-0">
+                      <Briefcase className="w-5 h-5 text-[#64ffda]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[#ccd6f6]">Minor in Mechatronics</p>
+                      <p className="text-xs text-[#8892b0]">Bridging hardware automation with software</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 pb-4 border-b border-[#1d3461]/30">
+                    <div className="w-10 h-10 rounded-lg bg-[#64ffda]/10 border border-[#64ffda]/15 flex items-center justify-center flex-shrink-0">
+                      <Award className="w-5 h-5 text-[#64ffda]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[#ccd6f6]">3× AWS Academy Certified</p>
+                      <p className="text-xs text-[#8892b0]">Cloud Foundations • ML Foundations • Data Engineering</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-lg bg-[#64ffda]/10 border border-[#64ffda]/15 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-5 h-5 text-[#64ffda]" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-[#ccd6f6]">Vadodara, India</p>
+                      <p className="text-xs text-[#8892b0]">Open to opportunities</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Right — certifications card stack */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="lg:col-span-7"
+              >
+                <CertCardStack />
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+
+        {/* ─── SKILLS (Resume-style inline format) ─── */}
+        <section id="skills" className="relative z-10 py-20 sm:py-28 px-6 scroll-mt-20">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="mb-10"
+            >
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#ccd6f6] flex items-center gap-3">
+                <span className="text-[#64ffda] font-mono text-lg">02.</span>
+                Technical Skills
+                <span className="hidden sm:block h-px bg-[#1d3461] flex-1 ml-4" />
+              </h2>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Object.entries(skillsByCategory).map(([category, skills], catIdx) => {
+                let CatIcon = Code;
+                if (category === "Frameworks & Libraries") CatIcon = Layout;
+                if (category === "Databases & Tools") CatIcon = Database;
+                if (category === "APIs & Platforms") CatIcon = Globe;
+                if (category === "Soft Skills") CatIcon = Sparkles;
+
+                return (
+                  <motion.div
+                    key={category}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: catIdx * 0.1 }}
+                    className="bg-[#112240]/60 border border-[#1d3461]/40 rounded-xl p-6 hover:border-[#64ffda]/30 transition-colors"
+                  >
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-10 h-10 rounded-lg bg-[#64ffda]/10 flex items-center justify-center">
+                        <CatIcon className="w-5 h-5 text-[#64ffda]" />
+                      </div>
+                      <h3 className="text-[#ccd6f6] font-medium">{category}</h3>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {skills.map(skill => (
+                        <div
+                          key={skill.name}
+                          className="px-3 py-1.5 bg-[#0a192f] border border-[#1d3461] rounded text-xs text-[#8892b0] hover:text-[#64ffda] hover:border-[#64ffda]/40 transition-colors"
+                        >
+                          {skill.name}
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+
+        {/* ─── PROJECTS ─── */}
+        <section id="projects" className="relative z-10 py-20 sm:py-28 px-6 scroll-mt-20">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="mb-16"
+            >
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#ccd6f6] flex items-center gap-3">
+                <span className="text-[#64ffda] font-mono text-lg">03.</span>
+                Featured Projects
+                <span className="hidden sm:block h-px bg-[#1d3461] flex-1 ml-4" />
+              </h2>
+            </motion.div>
+
+            <ProjectShowcase />
+          </div>
+        </section>
+
+
+        {/* ─── CONTACT ─── */}
+        <section id="contact" className="relative z-10 py-20 sm:py-28 px-6 scroll-mt-20">
+          <div className="max-w-2xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <span className="text-[#64ffda] font-mono text-sm">04. What's Next?</span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#ccd6f6] mt-4 mb-5">
+                Get In Touch
+              </h2>
+              <p className="text-[#8892b0] leading-relaxed mb-10 max-w-lg mx-auto">
+                Have an interesting project, a technical role, or just want to say hi?
+                My inbox is always open — let's build something together.
+              </p>
+            </motion.div>
+
+            {/* Contact form */}
+            <motion.form
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              onSubmit={handleContactSubmit}
+              className="space-y-4 text-left"
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  required
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
+                  placeholder="Your Name"
+                  className="w-full bg-[#112240] border border-[#1d3461] rounded-lg px-4 py-3 text-sm text-[#ccd6f6] placeholder-[#8892b0]/40 focus:outline-none focus:border-[#64ffda]/40 transition-colors"
+                />
+                <input
+                  type="email"
+                  required
+                  value={formEmail}
+                  onChange={(e) => setFormEmail(e.target.value)}
+                  placeholder="Your Email"
+                  className="w-full bg-[#112240] border border-[#1d3461] rounded-lg px-4 py-3 text-sm text-[#ccd6f6] placeholder-[#8892b0]/40 focus:outline-none focus:border-[#64ffda]/40 transition-colors"
+                />
+              </div>
+
+              <textarea
+                required
+                rows={4}
+                value={formMsg}
+                onChange={(e) => setFormMsg(e.target.value)}
+                placeholder="Your Message"
+                className="w-full bg-[#112240] border border-[#1d3461] rounded-lg px-4 py-3 text-sm text-[#ccd6f6] placeholder-[#8892b0]/40 focus:outline-none focus:border-[#64ffda]/40 transition-colors resize-none"
+              />
+
+              {formStatus === 'success' && (
+                <p className="text-[#64ffda] text-sm text-center">
+                  ✓ Message sent! I'll get back to you soon.
+                </p>
+              )}
+
+              <div className="text-center pt-2">
+                <button
+                  type="submit"
+                  disabled={formStatus === 'sending'}
+                  className="inline-flex items-center gap-2 text-[#64ffda] border border-[#64ffda]/40 px-8 py-3 rounded text-sm font-mono hover:bg-[#64ffda]/10 transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  {formStatus === 'sending' ? (
+                    <><RefreshCw className="w-4 h-4 animate-spin" /> Sending...</>
+                  ) : (
+                    <><Send className="w-4 h-4" /> Send Message</>
+                  )}
+                </button>
+              </div>
+            </motion.form>
+
+            {/* Social links — prominent in contact section */}
+            <div className="flex items-center justify-center gap-8 mt-12">
+              <a href={`mailto:${PERSONAL_INFO.email}`} className="flex flex-col items-center gap-2 text-[#8892b0] hover:text-[#64ffda] transition-colors group" aria-label="Email">
+                <div className="w-12 h-12 rounded-full border border-[#1d3461] flex items-center justify-center group-hover:border-[#64ffda]/40 group-hover:bg-[#64ffda]/5 transition-all">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono">Email</span>
+              </a>
+              <a href={PERSONAL_INFO.github} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 text-[#8892b0] hover:text-[#64ffda] transition-colors group" aria-label="GitHub">
+                <div className="w-12 h-12 rounded-full border border-[#1d3461] flex items-center justify-center group-hover:border-[#64ffda]/40 group-hover:bg-[#64ffda]/5 transition-all">
+                  <Github className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono">GitHub</span>
+              </a>
+              <a href={PERSONAL_INFO.linkedin} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 text-[#8892b0] hover:text-[#64ffda] transition-colors group" aria-label="LinkedIn">
+                <div className="w-12 h-12 rounded-full border border-[#1d3461] flex items-center justify-center group-hover:border-[#64ffda]/40 group-hover:bg-[#64ffda]/5 transition-all">
+                  <Linkedin className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-mono">LinkedIn</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+
+        {/* ─── FOOTER ─── */}
+        <footer className="relative z-10 py-8 px-6 border-t border-[#1d3461]/20">
+          <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-[#8892b0]/50 font-mono">
+              Designed & Built by Vishv Patel
+            </p>
+            <div className="flex gap-6 text-xs text-[#8892b0]/40">
+              <a href="#about" className="hover:text-[#64ffda] transition-colors">About</a>
+              <a href="#projects" className="hover:text-[#64ffda] transition-colors">Projects</a>
+              <a href="#contact" className="hover:text-[#64ffda] transition-colors">Contact</a>
+            </div>
+          </div>
+        </footer>
+
+
+        {/* ─── FLOATING ELEMENTS ─── */}
+        <AITwinChat />
+
+        {/* Back to top */}
+        <AnimatePresence>
+          {showScrollTop && (
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="fixed bottom-6 left-6 z-40 bg-[#112240] border border-[#1d3461] p-2.5 rounded-full text-[#8892b0] hover:text-[#64ffda] hover:border-[#64ffda]/30 transition-all cursor-pointer"
+              aria-label="Scroll to top"
+            >
+              <ArrowUp className="w-4 h-4" />
+            </motion.button>
+          )}
+        </AnimatePresence>
+
+        {/* Decorative side social links — more visible with labels (desktop only) */}
+        <div className="fixed bottom-0 left-8 z-30 hidden lg:flex flex-col items-center gap-5">
+          <a href={PERSONAL_INFO.github} target="_blank" rel="noopener noreferrer" className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all" title="GitHub">
+            <Github className="w-5 h-5" />
+          </a>
+          <a href={PERSONAL_INFO.linkedin} target="_blank" rel="noopener noreferrer" className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all" title="LinkedIn">
+            <Linkedin className="w-5 h-5" />
+          </a>
+          <a href={`mailto:${PERSONAL_INFO.email}`} className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all" title="Email">
+            <Mail className="w-5 h-5" />
+          </a>
+          <div className="w-px h-20 bg-[#8892b0]/30" />
         </div>
-      )}
+
+        <div className="fixed bottom-0 right-8 z-30 hidden lg:flex flex-col items-center gap-5">
+          <a
+            href={`mailto:${PERSONAL_INFO.email}`}
+            className="text-[#8892b0] hover:text-[#64ffda] transition-colors font-mono text-xs tracking-widest"
+            style={{ writingMode: 'vertical-rl' }}
+          >
+            {PERSONAL_INFO.email}
+          </a>
+          <div className="w-px h-20 bg-[#8892b0]/30" />
+        </div>
+      </div>
     </>
   );
 }
