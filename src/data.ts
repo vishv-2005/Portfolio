@@ -132,7 +132,7 @@ export const CERTIFICATIONS_DATA: Certification[] = [
     issuer: "Amazon Web Services (AWS)",
     year: "2026",
     badgeUrl: "https://images.credly.com/images/84fe7097-df0c-4fa9-b883-8a301a3577ee/AWS-Academy-Cloud-Foundations.png", // Credly placeholder
-    credentialUrl: "https://www.credly.com/org/amazon-web-services/badge/aws-academy-graduate-aws-academy-machine-learning-foundations",
+    credentialUrl: "https://1drv.ms/b/c/283f8787b1c38288/IQAkkpd1xC0hT6VIKMqZU2d8AaPcWyOsS2Dqj6sxKPuAh7A?e=moxwZR",
     skillsCovered: ["Computer Vision", "Natural Language Processing", "Amazon SageMaker", "Supervised Learning", "Linear Regression"]
   },
   {
@@ -141,7 +141,7 @@ export const CERTIFICATIONS_DATA: Certification[] = [
     issuer: "Amazon Web Services (AWS)",
     year: "2026",
     badgeUrl: "https://images.credly.com/images/3d74bebf-d50d-45df-911e-0d85ee1fa9f1/AWS_Academy_Graduate_-_AWS_Academy_Cloud_Architecting.png", // Credly placeholder
-    credentialUrl: "https://www.credly.com/org/amazon-web-services/badge/aws-academy-graduate-aws-academy-cloud-data-engineering",
+    credentialUrl: "https://1drv.ms/b/c/283f8787b1c38288/IQARo78hK3oUQrpTLSwZfahVAf-Mcv6QPEkhegRRi4aC8LM?e=YxmqMp",
     skillsCovered: ["AWS Glue", "Amazon Athena", "Amazon EMR", "Data Lake Architecture", "ETL Pipelines", "S3 Storage Optimization"]
   },
   {
@@ -150,7 +150,7 @@ export const CERTIFICATIONS_DATA: Certification[] = [
     issuer: "Amazon Web Services (AWS)",
     year: "2026",
     badgeUrl: "https://images.credly.com/images/84fe7097-df0c-4fa9-b883-8a301a3577ee/AWS-Academy-Cloud-Foundations.png",
-    credentialUrl: "https://www.credly.com/org/amazon-web-services/badge/aws-academy-graduate-aws-academy-cloud-foundations",
+    credentialUrl: "https://1drv.ms/b/c/283f8787b1c38288/IQA1DepsXxa2Tpva4GZ6tmVaARxn5fEATURtKAhdWUW_ne4?e=jg7cHe",
     skillsCovered: ["Cloud Economics", "IAM Policies", "Amazon EC2", "VPC Networking Security", "AWS Billing & Pricing Systems"]
   }
 ];

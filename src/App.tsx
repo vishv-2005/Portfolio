@@ -132,32 +132,28 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <div className="relative min-h-screen bg-[#0a192f] text-[#ccd6f6] overflow-x-hidden">
+      <div className="relative min-h-screen bg-black text-[#ededed] overflow-x-hidden">
         <BackgroundCanvas />
 
         {/* ─── NAVIGATION ─── */}
-        <nav className="fixed top-0 left-0 right-0 z-40 bg-[#0a192f]/80 backdrop-blur-lg border-b border-[#64ffda]/5">
-          <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <a href="#" className="text-xl font-semibold text-[#ccd6f6] hover:text-[#64ffda] transition-colors">
-              vishv<span className="text-[#64ffda]">.</span>
-            </a>
+        <nav className="fixed top-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-lg border-b border-[#1f1f1f]">
+          <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-end">
 
             {/* Desktop nav */}
-            <div className="hidden sm:flex items-center gap-7">
-              {NAV_LINKS.map((link, i) => (
+            <div className="hidden sm:flex items-center gap-8">
+              {NAV_LINKS.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  className="text-sm text-[#8892b0] hover:text-[#64ffda] transition-colors"
+                  className="text-sm text-[#888888] hover:text-[#c9a96e] transition-colors"
                 >
-                  <span className="text-[#64ffda] font-mono text-xs mr-1">0{i + 1}.</span>
                   {link.label}
                 </a>
               ))}
               <a
                 href={PERSONAL_INFO.resumeUrl}
                 download
-                className="text-sm text-[#64ffda] border border-[#64ffda]/40 px-4 py-1.5 rounded hover:bg-[#64ffda]/10 transition-colors"
+                className="text-sm text-[#c9a96e] border border-[#c9a96e]/40 px-4 py-1.5 rounded hover:bg-[#c9a96e]/10 transition-colors"
               >
                 Resume
               </a>
@@ -165,10 +161,12 @@ export default function App() {
 
             {/* Mobile hamburger */}
             <button
+              type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="sm:hidden text-[#64ffda] p-2 cursor-pointer"
+              className="sm:hidden text-[#c9a96e] p-3 -mr-2 cursor-pointer z-50 relative"
+              aria-label="Toggle menu"
             >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {isMobileMenuOpen ? <X className="w-6 h-6 pointer-events-none" /> : <Menu className="w-6 h-6 pointer-events-none" />}
             </button>
           </div>
 
@@ -176,10 +174,11 @@ export default function App() {
           <AnimatePresence>
             {isMobileMenuOpen && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="sm:hidden bg-[#112240] border-t border-[#1d3461]/30 overflow-hidden"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="sm:hidden bg-[#111111] border-t border-[#1f1f1f] overflow-hidden"
               >
                 <div className="px-6 py-4 space-y-3">
                   {NAV_LINKS.map((link) => (
@@ -187,7 +186,7 @@ export default function App() {
                       key={link.label}
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className="block text-sm text-[#8892b0] hover:text-[#64ffda] transition-colors py-2"
+                      className="block text-sm text-[#888888] hover:text-[#c9a96e] transition-colors py-2"
                     >
                       {link.label}
                     </a>
@@ -195,7 +194,7 @@ export default function App() {
                   <a
                     href={PERSONAL_INFO.resumeUrl}
                     download
-                    className="block text-sm text-[#64ffda] border border-[#64ffda]/40 px-4 py-2 rounded text-center hover:bg-[#64ffda]/10 transition-colors mt-2"
+                    className="block text-sm text-[#c9a96e] border border-[#c9a96e]/40 px-4 py-2 rounded text-center hover:bg-[#c9a96e]/10 transition-colors mt-2"
                   >
                     Resume
                   </a>
@@ -216,7 +215,7 @@ export default function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-[#64ffda] font-mono text-sm mb-5"
+                className="text-[#c9a96e] text-sm mb-5 tracking-wide"
               >
                 Hi, I am
               </motion.p>
@@ -225,9 +224,9 @@ export default function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-5xl sm:text-6xl lg:text-7xl font-bold text-[#ccd6f6] mb-3 tracking-tight"
+                className="text-5xl sm:text-6xl lg:text-7xl font-light text-[#ededed] mb-3 tracking-tight"
               >
-                Vishv Patel.
+                Vishv Patel
               </motion.h1>
 
               <motion.div
@@ -238,7 +237,7 @@ export default function App() {
               >
                 <h2
                   key={activeRoleIdx}
-                  className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#8892b0]/70 tracking-tight"
+                  className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#888888]/70 tracking-tight"
                 >
                   {PERSONAL_INFO.taglines[activeRoleIdx]}
                 </h2>
@@ -248,7 +247,7 @@ export default function App() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.4 }}
-                className="text-[#8892b0] max-w-lg text-base leading-relaxed"
+                className="text-[#888888] max-w-lg text-base leading-relaxed"
               >
                 Computer Science Engineering student at Navrachana University, building
                 production-grade full-stack applications, AI-powered systems, and cross-platform mobile experiences.
@@ -262,14 +261,14 @@ export default function App() {
               >
                 <a
                   href="#projects"
-                  className="inline-flex items-center gap-2 text-[#64ffda] border border-[#64ffda]/40 px-6 py-3 rounded text-sm font-mono hover:bg-[#64ffda]/10 transition-colors"
+                  className="inline-flex items-center gap-2 text-[#c9a96e] border border-[#c9a96e]/40 px-6 py-3 rounded text-sm hover:bg-[#c9a96e]/10 transition-colors"
                 >
                   View Projects <ArrowRight className="w-4 h-4" />
                 </a>
                 <a
                   href={PERSONAL_INFO.resumeUrl}
                   download
-                  className="inline-flex items-center gap-2 text-[#8892b0] border border-[#8892b0]/20 px-6 py-3 rounded text-sm font-mono hover:text-[#64ffda] hover:border-[#64ffda]/30 transition-colors"
+                  className="inline-flex items-center gap-2 text-[#888888] border border-[#888888]/20 px-6 py-3 rounded text-sm hover:text-[#c9a96e] hover:border-[#c9a96e]/30 transition-colors"
                 >
                   <Download className="w-4 h-4" /> Resume
                 </a>
@@ -291,10 +290,9 @@ export default function App() {
               transition={{ duration: 0.5 }}
               className="mb-10"
             >
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#ccd6f6] flex items-center gap-3">
-                <span className="text-[#64ffda] font-mono text-lg">01.</span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#ededed] flex items-center gap-3">
                 About Me
-                <span className="hidden sm:block h-px bg-[#1d3461] flex-1 ml-4" />
+                <span className="hidden sm:block h-px bg-[#1f1f1f] flex-1 ml-4" />
               </h2>
             </motion.div>
 
@@ -308,54 +306,54 @@ export default function App() {
                 transition={{ duration: 0.5, delay: 0.1 }}
                 className="lg:col-span-5 space-y-5"
               >
-                <p className="text-[#8892b0] leading-relaxed">
+                <p className="text-[#888888] leading-relaxed">
                   I'm a B.Tech Computer Science Engineering student at Navrachana University (2023–2027)
                   with a minor in Mechatronics — bridging hardware automation with modern software systems.
                 </p>
-                <p className="text-[#8892b0] leading-relaxed">
+                <p className="text-[#888888] leading-relaxed">
                   My work spans full-stack web applications, cross-platform mobile development with Flutter,
                   and AI/ML pipelines for processing real-world data — from training NLP models to building responsive admin dashboards.
                 </p>
 
                 {/* Full profile card integrated into About section */}
-                <div className="bg-[#112240]/60 border border-[#1d3461]/40 rounded-xl p-6 mt-8 space-y-4">
-                  <div className="flex items-center gap-4 pb-4 border-b border-[#1d3461]/30">
-                    <div className="w-10 h-10 rounded-lg bg-[#64ffda]/10 border border-[#64ffda]/15 flex items-center justify-center flex-shrink-0">
-                      <GraduationCap className="w-5 h-5 text-[#64ffda]" />
+                <div className="bg-[#111111]/60 border border-[#1f1f1f] rounded-xl p-6 mt-8 space-y-4">
+                  <div className="flex items-center gap-4 pb-4 border-b border-[#1f1f1f]">
+                    <div className="w-10 h-10 rounded-lg bg-[#c9a96e]/10 border border-[#c9a96e]/15 flex items-center justify-center flex-shrink-0">
+                      <GraduationCap className="w-5 h-5 text-[#c9a96e]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#ccd6f6]">B.Tech Computer Science & Engineering</p>
-                      <p className="text-xs text-[#8892b0]">Navrachana University • 2023–2027 • CGPA: 7.62</p>
+                      <p className="text-sm font-medium text-[#ededed]">B.Tech Computer Science & Engineering</p>
+                      <p className="text-xs text-[#888888]">Navrachana University • 2023–2027 • CGPA: 7.62</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 pb-4 border-b border-[#1d3461]/30">
-                    <div className="w-10 h-10 rounded-lg bg-[#64ffda]/10 border border-[#64ffda]/15 flex items-center justify-center flex-shrink-0">
-                      <Briefcase className="w-5 h-5 text-[#64ffda]" />
+                  <div className="flex items-center gap-4 pb-4 border-b border-[#1f1f1f]">
+                    <div className="w-10 h-10 rounded-lg bg-[#c9a96e]/10 border border-[#c9a96e]/15 flex items-center justify-center flex-shrink-0">
+                      <Briefcase className="w-5 h-5 text-[#c9a96e]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#ccd6f6]">Minor in Mechatronics</p>
-                      <p className="text-xs text-[#8892b0]">Bridging hardware automation with software</p>
+                      <p className="text-sm font-medium text-[#ededed]">Minor in Mechatronics</p>
+                      <p className="text-xs text-[#888888]">Bridging hardware automation with software</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 pb-4 border-b border-[#1d3461]/30">
-                    <div className="w-10 h-10 rounded-lg bg-[#64ffda]/10 border border-[#64ffda]/15 flex items-center justify-center flex-shrink-0">
-                      <Award className="w-5 h-5 text-[#64ffda]" />
+                  <div className="flex items-center gap-4 pb-4 border-b border-[#1f1f1f]">
+                    <div className="w-10 h-10 rounded-lg bg-[#c9a96e]/10 border border-[#c9a96e]/15 flex items-center justify-center flex-shrink-0">
+                      <Award className="w-5 h-5 text-[#c9a96e]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#ccd6f6]">3× AWS Academy Certified</p>
-                      <p className="text-xs text-[#8892b0]">Cloud Foundations • ML Foundations • Data Engineering</p>
+                      <p className="text-sm font-medium text-[#ededed]">3× AWS Academy Certified</p>
+                      <p className="text-xs text-[#888888]">Cloud Foundations • ML Foundations • Data Engineering</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-[#64ffda]/10 border border-[#64ffda]/15 flex items-center justify-center flex-shrink-0">
-                      <MapPin className="w-5 h-5 text-[#64ffda]" />
+                    <div className="w-10 h-10 rounded-lg bg-[#c9a96e]/10 border border-[#c9a96e]/15 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="w-5 h-5 text-[#c9a96e]" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#ccd6f6]">Vadodara, India</p>
-                      <p className="text-xs text-[#8892b0]">Open to opportunities</p>
+                      <p className="text-sm font-medium text-[#ededed]">Vadodara, India</p>
+                      <p className="text-xs text-[#888888]">Open to opportunities</p>
                     </div>
                   </div>
                 </div>
@@ -386,10 +384,9 @@ export default function App() {
               transition={{ duration: 0.5 }}
               className="mb-10"
             >
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#ccd6f6] flex items-center gap-3">
-                <span className="text-[#64ffda] font-mono text-lg">02.</span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#ededed] flex items-center gap-3">
                 Technical Skills
-                <span className="hidden sm:block h-px bg-[#1d3461] flex-1 ml-4" />
+                <span className="hidden sm:block h-px bg-[#1f1f1f] flex-1 ml-4" />
               </h2>
             </motion.div>
 
@@ -408,20 +405,20 @@ export default function App() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: catIdx * 0.1 }}
-                    className="bg-[#112240]/60 border border-[#1d3461]/40 rounded-xl p-6 hover:border-[#64ffda]/30 transition-colors"
+                    className="bg-[#111111]/60 border border-[#1f1f1f] rounded-xl p-6 hover:border-[#c9a96e]/30 transition-colors"
                   >
                     <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-lg bg-[#64ffda]/10 flex items-center justify-center">
-                        <CatIcon className="w-5 h-5 text-[#64ffda]" />
+                      <div className="w-10 h-10 rounded-lg bg-[#c9a96e]/10 flex items-center justify-center">
+                        <CatIcon className="w-5 h-5 text-[#c9a96e]" />
                       </div>
-                      <h3 className="text-[#ccd6f6] font-medium">{category}</h3>
+                      <h3 className="text-[#ededed] font-medium">{category}</h3>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
                       {skills.map(skill => (
                         <div
                           key={skill.name}
-                          className="px-3 py-1.5 bg-[#0a192f] border border-[#1d3461] rounded text-xs text-[#8892b0] hover:text-[#64ffda] hover:border-[#64ffda]/40 transition-colors"
+                          className="px-3 py-1.5 bg-black border border-[#1f1f1f] rounded text-xs text-[#888888] hover:text-[#c9a96e] hover:border-[#c9a96e]/40 transition-colors"
                         >
                           {skill.name}
                         </div>
@@ -445,10 +442,9 @@ export default function App() {
               transition={{ duration: 0.5 }}
               className="mb-16"
             >
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#ccd6f6] flex items-center gap-3">
-                <span className="text-[#64ffda] font-mono text-lg">03.</span>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#ededed] flex items-center gap-3">
                 Featured Projects
-                <span className="hidden sm:block h-px bg-[#1d3461] flex-1 ml-4" />
+                <span className="hidden sm:block h-px bg-[#1f1f1f] flex-1 ml-4" />
               </h2>
             </motion.div>
 
@@ -466,11 +462,11 @@ export default function App() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             >
-              <span className="text-[#64ffda] font-mono text-sm">04. What's Next?</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[#ccd6f6] mt-4 mb-5">
+              <span className="text-[#c9a96e] text-sm">What's Next?</span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#ededed] mt-4 mb-5">
                 Get In Touch
               </h2>
-              <p className="text-[#8892b0] leading-relaxed mb-10 max-w-lg mx-auto">
+              <p className="text-[#888888] leading-relaxed mb-10 max-w-lg mx-auto">
                 Have an interesting project, a technical role, or just want to say hi?
                 My inbox is always open — let's build something together.
               </p>
@@ -492,7 +488,7 @@ export default function App() {
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder="Your Name"
-                  className="w-full bg-[#112240] border border-[#1d3461] rounded-lg px-4 py-3 text-sm text-[#ccd6f6] placeholder-[#8892b0]/40 focus:outline-none focus:border-[#64ffda]/40 transition-colors"
+                  className="w-full bg-[#111111] border border-[#1f1f1f] rounded-lg px-4 py-3 text-sm text-[#ededed] placeholder-[#888888]/40 focus:outline-none focus:border-[#c9a96e]/40 transition-colors"
                 />
                 <input
                   type="email"
@@ -500,7 +496,7 @@ export default function App() {
                   value={formEmail}
                   onChange={(e) => setFormEmail(e.target.value)}
                   placeholder="Your Email"
-                  className="w-full bg-[#112240] border border-[#1d3461] rounded-lg px-4 py-3 text-sm text-[#ccd6f6] placeholder-[#8892b0]/40 focus:outline-none focus:border-[#64ffda]/40 transition-colors"
+                  className="w-full bg-[#111111] border border-[#1f1f1f] rounded-lg px-4 py-3 text-sm text-[#ededed] placeholder-[#888888]/40 focus:outline-none focus:border-[#c9a96e]/40 transition-colors"
                 />
               </div>
 
@@ -510,11 +506,11 @@ export default function App() {
                 value={formMsg}
                 onChange={(e) => setFormMsg(e.target.value)}
                 placeholder="Your Message"
-                className="w-full bg-[#112240] border border-[#1d3461] rounded-lg px-4 py-3 text-sm text-[#ccd6f6] placeholder-[#8892b0]/40 focus:outline-none focus:border-[#64ffda]/40 transition-colors resize-none"
+                className="w-full bg-[#111111] border border-[#1f1f1f] rounded-lg px-4 py-3 text-sm text-[#ededed] placeholder-[#888888]/40 focus:outline-none focus:border-[#c9a96e]/40 transition-colors resize-none"
               />
 
               {formStatus === 'success' && (
-                <p className="text-[#64ffda] text-sm text-center">
+                <p className="text-[#c9a96e] text-sm text-center">
                   ✓ Message sent! I'll get back to you soon.
                 </p>
               )}
@@ -523,7 +519,7 @@ export default function App() {
                 <button
                   type="submit"
                   disabled={formStatus === 'sending'}
-                  className="inline-flex items-center gap-2 text-[#64ffda] border border-[#64ffda]/40 px-8 py-3 rounded text-sm font-mono hover:bg-[#64ffda]/10 transition-colors cursor-pointer disabled:opacity-50"
+                  className="inline-flex items-center gap-2 text-[#c9a96e] border border-[#c9a96e]/40 px-8 py-3 rounded text-sm hover:bg-[#c9a96e]/10 transition-colors cursor-pointer disabled:opacity-50"
                 >
                   {formStatus === 'sending' ? (
                     <><RefreshCw className="w-4 h-4 animate-spin" /> Sending...</>
@@ -536,20 +532,20 @@ export default function App() {
 
             {/* Social links — prominent in contact section */}
             <div className="flex items-center justify-center gap-8 mt-12">
-              <a href={`mailto:${PERSONAL_INFO.email}`} className="flex flex-col items-center gap-2 text-[#8892b0] hover:text-[#64ffda] transition-colors group" aria-label="Email">
-                <div className="w-12 h-12 rounded-full border border-[#1d3461] flex items-center justify-center group-hover:border-[#64ffda]/40 group-hover:bg-[#64ffda]/5 transition-all">
+              <a href={`mailto:${PERSONAL_INFO.email}`} className="flex flex-col items-center gap-2 text-[#888888] hover:text-[#c9a96e] transition-colors group" aria-label="Email">
+                <div className="w-12 h-12 rounded-full border border-[#1f1f1f] flex items-center justify-center group-hover:border-[#c9a96e]/40 group-hover:bg-[#c9a96e]/5 transition-all">
                   <Mail className="w-5 h-5" />
                 </div>
                 <span className="text-[10px] font-mono">Email</span>
               </a>
-              <a href={PERSONAL_INFO.github} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 text-[#8892b0] hover:text-[#64ffda] transition-colors group" aria-label="GitHub">
-                <div className="w-12 h-12 rounded-full border border-[#1d3461] flex items-center justify-center group-hover:border-[#64ffda]/40 group-hover:bg-[#64ffda]/5 transition-all">
+              <a href={PERSONAL_INFO.github} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 text-[#888888] hover:text-[#c9a96e] transition-colors group" aria-label="GitHub">
+                <div className="w-12 h-12 rounded-full border border-[#1f1f1f] flex items-center justify-center group-hover:border-[#c9a96e]/40 group-hover:bg-[#c9a96e]/5 transition-all">
                   <Github className="w-5 h-5" />
                 </div>
                 <span className="text-[10px] font-mono">GitHub</span>
               </a>
-              <a href={PERSONAL_INFO.linkedin} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 text-[#8892b0] hover:text-[#64ffda] transition-colors group" aria-label="LinkedIn">
-                <div className="w-12 h-12 rounded-full border border-[#1d3461] flex items-center justify-center group-hover:border-[#64ffda]/40 group-hover:bg-[#64ffda]/5 transition-all">
+              <a href={PERSONAL_INFO.linkedin} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-2 text-[#888888] hover:text-[#c9a96e] transition-colors group" aria-label="LinkedIn">
+                <div className="w-12 h-12 rounded-full border border-[#1f1f1f] flex items-center justify-center group-hover:border-[#c9a96e]/40 group-hover:bg-[#c9a96e]/5 transition-all">
                   <Linkedin className="w-5 h-5" />
                 </div>
                 <span className="text-[10px] font-mono">LinkedIn</span>
@@ -560,15 +556,15 @@ export default function App() {
 
 
         {/* ─── FOOTER ─── */}
-        <footer className="relative z-10 py-8 px-6 border-t border-[#1d3461]/20">
+        <footer className="relative z-10 py-8 px-6 border-t border-[#1f1f1f]/40">
           <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-[#8892b0]/50 font-mono">
+            <p className="text-xs text-[#888888]/50">
               Designed & Built by Vishv Patel
             </p>
-            <div className="flex gap-6 text-xs text-[#8892b0]/40">
-              <a href="#about" className="hover:text-[#64ffda] transition-colors">About</a>
-              <a href="#projects" className="hover:text-[#64ffda] transition-colors">Projects</a>
-              <a href="#contact" className="hover:text-[#64ffda] transition-colors">Contact</a>
+            <div className="flex gap-6 text-xs text-[#888888]/40">
+              <a href="#about" className="hover:text-[#c9a96e] transition-colors">About</a>
+              <a href="#projects" className="hover:text-[#c9a96e] transition-colors">Projects</a>
+              <a href="#contact" className="hover:text-[#c9a96e] transition-colors">Contact</a>
             </div>
           </div>
         </footer>
@@ -585,7 +581,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="fixed bottom-6 left-6 z-40 bg-[#112240] border border-[#1d3461] p-2.5 rounded-full text-[#8892b0] hover:text-[#64ffda] hover:border-[#64ffda]/30 transition-all cursor-pointer"
+              className="fixed bottom-6 left-6 z-40 bg-[#111111] border border-[#1f1f1f] p-2.5 rounded-full text-[#888888] hover:text-[#c9a96e] hover:border-[#c9a96e]/30 transition-all cursor-pointer"
               aria-label="Scroll to top"
             >
               <ArrowUp className="w-4 h-4" />
@@ -595,27 +591,27 @@ export default function App() {
 
         {/* Decorative side social links — more visible with labels (desktop only) */}
         <div className="fixed bottom-0 left-8 z-30 hidden lg:flex flex-col items-center gap-5">
-          <a href={PERSONAL_INFO.github} target="_blank" rel="noopener noreferrer" className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all" title="GitHub">
+          <a href={PERSONAL_INFO.github} target="_blank" rel="noopener noreferrer" className="text-[#888888] hover:text-[#c9a96e] hover:-translate-y-1 transition-all" title="GitHub">
             <Github className="w-5 h-5" />
           </a>
-          <a href={PERSONAL_INFO.linkedin} target="_blank" rel="noopener noreferrer" className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all" title="LinkedIn">
+          <a href={PERSONAL_INFO.linkedin} target="_blank" rel="noopener noreferrer" className="text-[#888888] hover:text-[#c9a96e] hover:-translate-y-1 transition-all" title="LinkedIn">
             <Linkedin className="w-5 h-5" />
           </a>
-          <a href={`mailto:${PERSONAL_INFO.email}`} className="text-[#8892b0] hover:text-[#64ffda] hover:-translate-y-1 transition-all" title="Email">
+          <a href={`mailto:${PERSONAL_INFO.email}`} className="text-[#888888] hover:text-[#c9a96e] hover:-translate-y-1 transition-all" title="Email">
             <Mail className="w-5 h-5" />
           </a>
-          <div className="w-px h-20 bg-[#8892b0]/30" />
+          <div className="w-px h-20 bg-[#888888]/30" />
         </div>
 
         <div className="fixed bottom-0 right-8 z-30 hidden lg:flex flex-col items-center gap-5">
           <a
             href={`mailto:${PERSONAL_INFO.email}`}
-            className="text-[#8892b0] hover:text-[#64ffda] transition-colors font-mono text-xs tracking-widest"
+            className="text-[#888888] hover:text-[#c9a96e] transition-colors font-mono text-xs tracking-widest"
             style={{ writingMode: 'vertical-rl' }}
           >
             {PERSONAL_INFO.email}
           </a>
-          <div className="w-px h-20 bg-[#8892b0]/30" />
+          <div className="w-px h-20 bg-[#888888]/30" />
         </div>
       </div>
     </>

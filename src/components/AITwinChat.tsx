@@ -97,18 +97,18 @@ export default function AITwinChat() {
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 2, duration: 0.5 }}
-              className="bg-[#112240] border border-[#1d3461] text-[#ccd6f6] text-xs font-mono px-3 py-1.5 rounded-lg shadow-lg hidden sm:block"
+              className="bg-[#111111] border border-[#1f1f1f] text-[#ededed] text-xs px-3 py-1.5 rounded-lg shadow-lg hidden sm:block"
             >
               Ask AI ✨
             </motion.span>
 
             <button
               onClick={() => setIsOpen(true)}
-              className="relative bg-[#64ffda] text-[#0a192f] p-4 rounded-full shadow-lg shadow-[#64ffda]/25 hover:shadow-[#64ffda]/50 hover:scale-110 transition-all cursor-pointer"
+              className="relative bg-[#c9a96e] text-black p-4 rounded-full shadow-lg shadow-[#c9a96e]/25 hover:shadow-[#c9a96e]/50 hover:scale-110 transition-all cursor-pointer"
               aria-label="Open AI chat"
             >
               {/* Pulse ring */}
-              <span className="absolute inset-0 rounded-full bg-[#64ffda]/30 animate-ping" />
+              <span className="absolute inset-0 rounded-full bg-[#c9a96e]/30 animate-ping" />
               <MessageCircle className="w-6 h-6 relative z-10" />
             </button>
           </motion.div>
@@ -123,23 +123,23 @@ export default function AITwinChat() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] bg-[#112240] border border-[#1d3461] rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+            className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] bg-[#111111] border border-[#1f1f1f] rounded-2xl shadow-2xl flex flex-col overflow-hidden"
             style={{ height: '480px' }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-[#1d3461]">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-[#1f1f1f]">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-[#64ffda]/10 flex items-center justify-center">
-                  <Bot className="w-4 h-4 text-[#64ffda]" />
+                <div className="w-8 h-8 rounded-full bg-[#c9a96e]/10 flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-[#c9a96e]" />
                 </div>
                 <div>
-                  <span className="text-sm font-medium text-[#ccd6f6]">AI Assistant</span>
-                  <span className="block text-[10px] text-[#8892b0]">Ask about Vishv's work</span>
+                  <span className="text-sm font-medium text-[#ededed]">AI Assistant</span>
+                  <span className="block text-[10px] text-[#888888]">Ask about Vishv's work</span>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-[#8892b0] hover:text-[#ccd6f6] p-1 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
+                className="text-[#888888] hover:text-[#ededed] p-1 rounded-lg hover:bg-white/5 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -157,12 +157,12 @@ export default function AITwinChat() {
                     <div
                       className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-sm leading-relaxed ${
                         isAssistant
-                          ? 'bg-[#0a192f] text-[#ccd6f6] border border-[#1d3461]'
-                          : 'bg-[#64ffda]/10 text-[#64ffda] border border-[#64ffda]/20'
+                          ? 'bg-black text-[#ededed] border border-[#1f1f1f]'
+                          : 'bg-[#c9a96e]/10 text-[#c9a96e] border border-[#c9a96e]/20'
                       }`}
                     >
                       <p className="text-[13px]">{msg.content}</p>
-                      <span className="text-[9px] text-[#8892b0]/60 mt-1 block text-right">
+                      <span className="text-[9px] text-[#888888]/60 mt-1 block text-right">
                         {msg.timestamp}
                       </span>
                     </div>
@@ -173,11 +173,11 @@ export default function AITwinChat() {
               {/* Loading indicator */}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-[#0a192f] border border-[#1d3461] rounded-xl px-4 py-3">
+                  <div className="bg-black border border-[#1f1f1f] rounded-xl px-4 py-3">
                     <div className="flex gap-1.5">
-                      <span className="w-1.5 h-1.5 bg-[#64ffda]/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <span className="w-1.5 h-1.5 bg-[#64ffda]/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <span className="w-1.5 h-1.5 bg-[#64ffda]/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                      <span className="w-1.5 h-1.5 bg-[#c9a96e]/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-1.5 h-1.5 bg-[#c9a96e]/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-1.5 h-1.5 bg-[#c9a96e]/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
                   </div>
                 </div>
@@ -194,25 +194,25 @@ export default function AITwinChat() {
             </div>
 
             {/* Input */}
-            <form onSubmit={handleFormSubmit} className="p-3 border-t border-[#1d3461]">
+            <form onSubmit={handleFormSubmit} className="p-3 border-t border-[#1f1f1f]">
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Ask me anything..."
-                  className="flex-1 bg-[#0a192f] border border-[#1d3461] rounded-lg px-3 py-2.5 text-sm text-[#ccd6f6] placeholder-[#8892b0]/50 focus:outline-none focus:border-[#64ffda]/40 transition-colors"
+                  className="flex-1 bg-black border border-[#1f1f1f] rounded-lg px-3 py-2.5 text-sm text-[#ededed] placeholder-[#888888]/50 focus:outline-none focus:border-[#c9a96e]/40 transition-colors"
                   disabled={isLoading}
                 />
                 <button
                   type="submit"
                   disabled={isLoading || !inputValue.trim()}
-                  className="bg-[#64ffda]/10 text-[#64ffda] p-2.5 rounded-lg hover:bg-[#64ffda]/20 disabled:opacity-30 transition-colors cursor-pointer"
+                  className="bg-[#c9a96e]/10 text-[#c9a96e] p-2.5 rounded-lg hover:bg-[#c9a96e]/20 disabled:opacity-30 transition-colors cursor-pointer"
                 >
                   <Send className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-[9px] text-[#8892b0]/40 mt-1.5 text-center">
+              <p className="text-[9px] text-[#888888]/40 mt-1.5 text-center">
                 AI demo — responses based on portfolio data
               </p>
             </form>

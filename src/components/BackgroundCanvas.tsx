@@ -45,19 +45,19 @@ export default function BackgroundCanvas() {
       constructor() {
         this.x = Math.random() * width;
         this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.3;
-        this.vy = (Math.random() - 0.5) * 0.3;
-        this.size = Math.random() * 2 + 0.8;
+        this.vx = (Math.random() - 0.5) * 0.25;
+        this.vy = (Math.random() - 0.5) * 0.25;
+        this.size = Math.random() * 1.8 + 0.6;
         this.baseSize = this.size;
 
-        // Muted teal/slate/blue tones that match the palette
+        // Warm gold/white/amber tones on black
         const rand = Math.random();
-        if (rand < 0.4) {
-          this.color = 'rgba(100, 255, 218, 0.5)'; // Teal accent
-        } else if (rand < 0.7) {
-          this.color = 'rgba(136, 146, 176, 0.4)'; // Muted slate
+        if (rand < 0.35) {
+          this.color = 'rgba(201, 169, 110, 0.5)';   // Warm gold
+        } else if (rand < 0.65) {
+          this.color = 'rgba(255, 255, 255, 0.25)';   // Soft white
         } else {
-          this.color = 'rgba(100, 200, 255, 0.35)'; // Soft blue
+          this.color = 'rgba(210, 180, 130, 0.35)';   // Muted amber
         }
       }
 
@@ -101,8 +101,8 @@ export default function BackgroundCanvas() {
       }
     }
 
-    // Good amount of particles for a lively constellation
-    const particleCount = Math.min(100, Math.floor((width * height) / 14000));
+    // Denser constellation — more particles, wider connections
+    const particleCount = Math.min(160, Math.floor((width * height) / 9000));
     const particles: Particle[] = [];
     for (let i = 0; i < particleCount; i++) {
       particles.push(new Particle());
@@ -119,7 +119,7 @@ export default function BackgroundCanvas() {
       ctx.clearRect(0, 0, width, height);
 
       // Draw constellation connections
-      ctx.lineWidth = 0.6;
+      ctx.lineWidth = 0.5;
       for (let i = 0; i < particles.length; i++) {
         particles[i].update(reducedMotion);
         particles[i].draw();
@@ -129,9 +129,9 @@ export default function BackgroundCanvas() {
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 120) {
-            const alpha = (120 - dist) / 120 * 0.12;
-            ctx.strokeStyle = `rgba(100, 255, 218, ${alpha})`;
+          if (dist < 140) {
+            const alpha = (140 - dist) / 140 * 0.1;
+            ctx.strokeStyle = `rgba(201, 169, 110, ${alpha})`;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
@@ -147,7 +147,7 @@ export default function BackgroundCanvas() {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
       particles.length = 0;
-      const count = Math.min(100, Math.floor((width * height) / 14000));
+      const count = Math.min(160, Math.floor((width * height) / 9000));
       for (let i = 0; i < count; i++) {
         particles.push(new Particle());
       }
