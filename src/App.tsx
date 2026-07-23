@@ -20,10 +20,12 @@ import {
   Code,
   Layout,
   Database,
-  Globe
+  Globe,
+  Trophy,
+  GitBranch
 } from 'lucide-react';
 
-import { PERSONAL_INFO, SKILLS_DATA } from './data';
+import { PERSONAL_INFO, SKILLS_DATA, ACHIEVEMENTS_DATA } from './data';
 
 import BackgroundCanvas from './components/BackgroundCanvas';
 import LoadingScreen from './components/LoadingScreen';
@@ -119,6 +121,7 @@ export default function App() {
 
   const NAV_LINKS = [
     { label: 'About', href: '#about' },
+    { label: 'Achievements', href: '#achievements' },
     { label: 'Skills', href: '#skills' },
     { label: 'Projects', href: '#projects' },
     { label: 'Contact', href: '#contact' },
@@ -370,6 +373,82 @@ export default function App() {
               >
                 <CertCardStack />
               </motion.div>
+            </div>
+          </div>
+        </section>
+
+
+        {/* ─── ACHIEVEMENTS ─── */}
+        <section id="achievements" className="relative z-10 py-20 sm:py-28 px-6 scroll-mt-20">
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="mb-12"
+            >
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#ededed] flex items-center gap-3">
+                Key Achievements & Impact
+                <span className="hidden sm:block h-px bg-[#1f1f1f] flex-1 ml-4" />
+              </h2>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {ACHIEVEMENTS_DATA.map((ach, idx) => {
+                let AchIcon = Trophy;
+                if (ach.icon === 'Globe') AchIcon = Globe;
+                if (ach.icon === 'Briefcase') AchIcon = Briefcase;
+                if (ach.icon === 'Award') AchIcon = Award;
+                if (ach.icon === 'Layout') AchIcon = Layout;
+                if (ach.icon === 'GitBranch') AchIcon = GitBranch;
+                if (ach.icon === 'Sparkles') AchIcon = Sparkles;
+
+                return (
+                  <motion.div
+                    key={ach.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: idx * 0.08 }}
+                    className="bg-[#111111]/60 border border-[#1f1f1f] rounded-xl p-6 hover:border-[#c9a96e]/30 transition-all flex flex-col justify-between group"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-lg bg-[#c9a96e]/10 border border-[#c9a96e]/15 flex items-center justify-center group-hover:scale-105 transition-transform">
+                          <AchIcon className="w-5 h-5 text-[#c9a96e]" />
+                        </div>
+                        {ach.badge && (
+                          <span className="text-[10px] font-mono text-[#c9a96e] bg-[#c9a96e]/10 border border-[#c9a96e]/20 px-2.5 py-1 rounded-full uppercase tracking-wider font-semibold">
+                            {ach.badge}
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="text-base font-semibold text-[#ededed] mb-2 group-hover:text-[#c9a96e] transition-colors">
+                        {ach.title}
+                      </h3>
+
+                      <p className="text-xs text-[#888888] leading-relaxed">
+                        {ach.description}
+                      </p>
+                    </div>
+
+                    {ach.link && (
+                      <div className="pt-4 mt-4 border-t border-[#1f1f1f]">
+                        <a
+                          href={ach.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs text-[#c9a96e] hover:underline font-mono"
+                        >
+                          {ach.linkText || 'Learn More'} <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
+                    )}
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </section>

@@ -46,3 +46,14 @@ export interface ChatMessage {
   content: string;
   timestamp: string;
 }
+
+export interface Achievement {
+  id: string;
+  title: string;
+  category: string;
+  description: string;
+  badge?: string;
+  icon: string;
+  link?: string;
+  linkText?: string;
+}

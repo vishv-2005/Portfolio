@@ -3,17 +3,19 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 
 const STORY_CHAPTERS = [
   { id: 'hero', label: 'Hello', threshold: 0 },
-  { id: 'about', label: 'My Story', threshold: 0.12 },
-  { id: 'skills', label: 'What I Know', threshold: 0.35 },
-  { id: 'projects', label: 'What I Built', threshold: 0.55 },
-  { id: 'contact', label: "Let's Talk", threshold: 0.8 },
+  { id: 'about', label: 'My Story', threshold: 0.1 },
+  { id: 'achievements', label: 'Highlights', threshold: 0.26 },
+  { id: 'skills', label: 'What I Know', threshold: 0.42 },
+  { id: 'projects', label: 'What I Built', threshold: 0.62 },
+  { id: 'contact', label: "Let's Talk", threshold: 0.85 },
 ];
 
 const SCROLL_TEASERS = [
-  { trigger: 0.05, text: "Scroll to discover my journey ↓", fadeOut: 0.12 },
-  { trigger: 0.28, text: "Keep going — see what I can do ↓", fadeOut: 0.36 },
-  { trigger: 0.48, text: "Next up — projects I've built ↓", fadeOut: 0.56 },
-  { trigger: 0.72, text: "Almost there — let's connect ↓", fadeOut: 0.82 },
+  { trigger: 0.05, text: "Scroll to discover my journey ↓", fadeOut: 0.1 },
+  { trigger: 0.2, text: "Key achievements & impact ↓", fadeOut: 0.26 },
+  { trigger: 0.35, text: "Keep going — see what I can do ↓", fadeOut: 0.42 },
+  { trigger: 0.55, text: "Next up — projects I've built ↓", fadeOut: 0.62 },
+  { trigger: 0.78, text: "Almost there — let's connect ↓", fadeOut: 0.85 },
 ];
 
 export default function ScrollStory() {

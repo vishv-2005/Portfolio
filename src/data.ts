@@ -1,4 +1,4 @@
-import { Project, Skill, TimelineEvent, Certification } from './types';
+import { Project, Skill, TimelineEvent, Certification, Achievement } from './types';
 
 export const PERSONAL_INFO = {
   name: "Vishv Patel",
@@ -240,5 +240,58 @@ export const PROJECTS_DATA: Project[] = [
     ],
     demoUrl: "https://societease.online",
     githubUrl: "https://github.com/vishv-2005/SocietEaseWeb"
+  }
+];
+
+export const ACHIEVEMENTS_DATA: Achievement[] = [
+  {
+    id: "hackathon",
+    title: "MeshWorks Hackathon Contributor",
+    category: "Hackathon",
+    badge: "US Sponsor",
+    description: "Participated in a MeshWorks (US-based) company-sponsored hackathon, contributing to a smart web scraping solution for real-time supplier price discovery.",
+    icon: "Trophy"
+  },
+  {
+    id: "deployment",
+    title: "End-to-End Production Deployment",
+    category: "Cloud & DevOps",
+    badge: "societease.online",
+    description: "Independently deployed a full-stack Java web application to production with custom domain setup and cloud infrastructure management.",
+    link: "https://societease.online",
+    linkText: "Visit Live Site",
+    icon: "Globe"
+  },
+  {
+    id: "freelance",
+    title: "Freelance Travel Agency Platform",
+    category: "Freelance",
+    badge: "Active Client",
+    description: "Undertaking a full-cycle freelance web development project for a travel agency client — independently managing requirements, UI design, and development.",
+    icon: "Briefcase"
+  },
+  {
+    id: "aws-certs",
+    title: "3× AWS Academy Certified",
+    category: "Certifications",
+    badge: "AWS Cloud",
+    description: "Earned 3 rigorous AWS Academy certifications spanning Cloud Foundations, Machine Learning Foundations, and Data Engineering workflows.",
+    icon: "Award"
+  },
+  {
+    id: "apps-built",
+    title: "4+ Full-Stack & Mobile Apps",
+    category: "Engineering",
+    badge: "Web & Mobile",
+    description: "Engineered 4+ production-ready web and cross-platform mobile applications utilizing React, Flutter, Node.js, Python NLP, and Java.",
+    icon: "Layout"
+  },
+  {
+    id: "meta-gemini",
+    title: "Meta Cloud & Gemini API Integration",
+    category: "AI & APIs",
+    badge: "Production AI",
+    description: "Built enterprise communication systems directly interfacing Meta’s WhatsApp Business Cloud API with Gemini Generative AI models.",
+    icon: "Sparkles"
   }
 ];
