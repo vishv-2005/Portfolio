@@ -30,6 +30,7 @@ import LoadingScreen from './components/LoadingScreen';
 import ProjectShowcase from './components/ProjectShowcase';
 import CertCardStack from './components/CertCardStack';
 import AITwinChat from './components/AITwinChat';
+import ScrollStory from './components/ScrollStory';
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -588,6 +589,9 @@ export default function App() {
             </motion.button>
           )}
         </AnimatePresence>
+
+        {/* ─── SCROLL STORY (desktop side indicator) ─── */}
+        <ScrollStory />
 
         {/* Decorative side social links — more visible with labels (desktop only) */}
         <div className="fixed bottom-0 left-8 z-30 hidden lg:flex flex-col items-center gap-5">
