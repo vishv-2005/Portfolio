@@ -31,7 +31,7 @@ import BackgroundCanvas from './components/BackgroundCanvas';
 import LoadingScreen from './components/LoadingScreen';
 import ProjectShowcase from './components/ProjectShowcase';
 import CertCardStack from './components/CertCardStack';
-import AITwinChat from './components/AITwinChat';
+
 import ScrollStory from './components/ScrollStory';
 
 export default function App() {
@@ -651,7 +651,6 @@ export default function App() {
 
 
         {/* ─── FLOATING ELEMENTS ─── */}
-        <AITwinChat />
 
         {/* Back to top */}
         <AnimatePresence>
