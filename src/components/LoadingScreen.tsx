@@ -53,14 +53,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         Vishv Patel
       </motion.h1>
 
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        className="text-sm text-[#888888] mb-12 tracking-wide"
-      >
-        Software Engineer
-      </motion.p>
 
       {/* Minimal progress bar */}
       <div className="w-48 sm:w-56">
